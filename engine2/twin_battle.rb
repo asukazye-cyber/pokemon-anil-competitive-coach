@@ -142,12 +142,36 @@ module CoachEngine2
   # and rand are covered (the multiplayer sync rework routes rand through
   # anil_rework_rng if set — we set it, and it calls our RNG for both paths).
   #---------------------------------------------------------------------------
+  # Raised when a twin cannot be guaranteed to stay isolated from the live
+  # battle (and from the network). Battle#competitive_coach_recommendation
+  # rescues StandardError and falls back to the pre-2.0 Coach chain, so this
+  # is a clean "Engine 2.0 unavailable for this battle" signal.
+  class TwinIsolationError < StandardError; end
+
+  class << self
+    # Multiplayer isolation gate — see TwinFactory.sync_context_active?.
+    # Engine 2.0 refuses to simulate rounds on a snapshot of a battle that is
+    # inside an active BattleSync context. Set to true ONLY after verifying on
+    # the real client that the sync wrappers are inert for snapshots.
+    attr_writer :allow_sync_twins
+
+    def allow_sync_twins
+      @allow_sync_twins = false if @allow_sync_twins.nil?
+      @allow_sync_twins
+    end
+  end
+
   # All coach behaviour that a battle instance needs on top of the real
-  # engine. Defined as a module so BOTH paths share one implementation:
+  # engine. Defined as a module so BOTH paths share ONE implementation:
   #   * TwinBattle (headless construction from parties), and
   #   * TwinFactory.from_live (Marshal snapshot of a live battle, extended
   #     with this module — the snapshot keeps its original battle class,
   #     preserving format-specific behaviour like Battle Arena's).
+  # This matters: from_live is the path the GAME actually uses, and a snapshot
+  # of a plain `Battle` inherits the engine's own pbRandom, its out-of-battle
+  # bookkeeping and its party-screen replacement prompts unless the module
+  # overrides them. Anything defined only on TwinBattle protects the tests
+  # and nothing else.
   module TwinBehavior
     attr_accessor :coach_rng
     attr_writer :turnCount
@@ -157,36 +181,35 @@ module CoachEngine2
     # NOT preset by the controller (the search re-runs such rounds once per
     # candidate replacement to enumerate the decision).
     attr_accessor :coach_forced_replacements
+    # The joint action this round executed, as PLAIN DATA
+    # ({idxBattler => [:UseMove, idxMove, moveId, target] | [:SwitchOut, i]}).
+    # The engine rewrites @choices in place and clears each battler's choice
+    # once it has acted, so after a round @choices no longer says what was
+    # executed — and with the game AI driving a side, nothing else does. Move
+    # OBJECTS are deliberately not kept here: they would drag the parent
+    # battle's object graph into every Marshal clone of this one.
+    attr_accessor :coach_choices
 
     def init_coach_ivars(rng)
       @coach_rng = rng || DeterministicRNG.new(policy: :median)
       @coach_next_replacements = {}
       @coach_events = []
       @coach_forced_replacements = []
-    end
-  end
-
-  class TwinBattle < Battle
-    include TwinBehavior
-
-    def initialize(scene, p1, p2, player, opponent, rng: nil)
-      init_coach_ivars(rng)
-      @coach_rng = rng || DeterministicRNG.new(policy: :median)
-      @coach_next_replacements = {}
-      @coach_events = []
-      super(scene, p1, p2, player, opponent)
-      # Route the multiplayer-sync patched rand/pbRandom into our RNG.
-      self.anil_rework_rng = CoachRNGAdapter.new(@coach_rng) if respond_to?(:anil_rework_rng=)
+      @coach_choices = {}
+      # Route the multiplayer-sync patched rand/pbRandom into our RNG as well,
+      # so a snapshot stays instrumented even where the rework's patched
+      # methods are still in the call chain.
+      if respond_to?(:anil_rework_rng=)
+        self.anil_rework_rng = TwinBattle::CoachRNGAdapter.new(@coach_rng)
+      end
     end
 
-    # The AnilLanRework BattleRNG duck-type (only what battle code touches).
-    class CoachRNGAdapter
-      def initialize(rng); @rng = rng; end
-      def rand(max = nil); @rng.rand(max); end
-      def snapshot; nil; end
-      def restore(_x); end
-    end
-
+    #-------------------------------------------------------------------------
+    # RNG routing. EVERY roll of a simulated round must go through the twin's
+    # DeterministicRNG: the search enumerates chance outcomes from its log, so
+    # an uninstrumented battle means non-reproducible rounds AND silently no
+    # chance enumeration at all (the log stays empty).
+    #-------------------------------------------------------------------------
     def pbRandom(x = nil)
       return @coach_rng.rand(x)
     end
@@ -199,26 +222,33 @@ module CoachEngine2
       return @coach_rng.rand(x)
     end
 
-    # Exp gain is meaningless in a twin; the bookkeeping touches the player's
-    # real party and storage. Silently no-op at the source of the chain.
+    #-------------------------------------------------------------------------
+    # Out-of-battle bookkeeping has no place in a simulation: it touches the
+    # player's real party, storage, pokedex and wallet (through the deep-copied
+    # objects at best, and through an exception at worst).
+    #-------------------------------------------------------------------------
+    # Exp gain is meaningless in a twin.
     def pbGainExp; end
 
-    # Dex registration is out-of-battle bookkeeping (it reads the player's
-    # pokedex); a twin must not mutate anything outside itself.
     def pbSetSeen(_battler); end
 
     def pbSetCaught(_battler); end
 
     def pbSetDefeated(_battler); end
 
-    # End-of-battle bookkeeping (money, storage) has no place in a twin.
+    # End-of-battle bookkeeping (money, storage, dex) must never run for a
+    # round the coach only imagined.
     def pbEndOfBattle; end
 
-    # Forced replacement after a faint: instead of opening a party screen
-    # (there is no UI in a twin), use the replacement the controller
-    # pre-registered for this battler; if none, auto-pick the first able party
-    # member (documented policy; the search may enumerate replacements via
-    # TurnDriver#step!'s replacements argument instead).
+    #-------------------------------------------------------------------------
+    # Forced replacement after a faint: never open a party screen (there is no
+    # UI in a twin, and the shipped game's pbSwitchInBetween is wrapped by the
+    # BattleSync layer, which would broadcast a switch choice or block waiting
+    # for the peer). Use the replacement the controller pre-registered for this
+    # battler; if none, auto-pick the first able party member (documented
+    # policy; the search enumerates replacements via TurnDriver#step!'s
+    # replacements argument instead).
+    #-------------------------------------------------------------------------
     def pbGetReplacementPokemonIndex(idxBattler, random = false)
       preset = @coach_next_replacements[idxBattler]
       if !preset.nil? && pbCanSwitchIn?(idxBattler, preset)
@@ -250,8 +280,10 @@ module CoachEngine2
       return -1
     end
 
-    # Catch-all observation: collect displayed messages (they are legitimate
+    #-------------------------------------------------------------------------
+    # Catch-all observation: collect displayed messages (legitimate
     # client-visible information; useful for belief updates and debugging).
+    #-------------------------------------------------------------------------
     def pbDisplay(msg, &block)
       @coach_events.push(msg) if msg.is_a?(String)
       super
@@ -265,6 +297,27 @@ module CoachEngine2
     def pbDisplayBrief(msg)
       @coach_events.push(msg) if msg.is_a?(String)
       super
+    end
+  end
+
+  class TwinBattle < Battle
+    include TwinBehavior
+
+    def initialize(scene, p1, p2, player, opponent, rng: nil)
+      # Coach ivars (and the RNG routing) must exist BEFORE super: the real
+      # Battle#initialize already draws rolls and displays messages.
+      init_coach_ivars(rng)
+      super(scene, p1, p2, player, opponent)
+      # Route the multiplayer-sync patched rand/pbRandom into our RNG.
+      self.anil_rework_rng = CoachRNGAdapter.new(@coach_rng) if respond_to?(:anil_rework_rng=)
+    end
+
+    # The AnilLanRework BattleRNG duck-type (only what battle code touches).
+    class CoachRNGAdapter
+      def initialize(rng); @rng = rng; end
+      def rand(max = nil); @rng.rand(max); end
+      def snapshot; nil; end
+      def restore(_x); end
     end
   end
 
@@ -341,6 +394,31 @@ module CoachEngine2
       snapshot_twin(live, rng: rng)
     end
 
+    # True when the live battle is inside an active BattleSync/multiplayer
+    # context — i.e. when running a simulated round on a snapshot could emit or
+    # consume network traffic on behalf of the LIVE battle. The shipped game
+    # wraps Battle#pbAttackPhase (turn-sync fail-safe + attack barrier),
+    # Battle#pbEndOfRoundPhase (end-of-turn HP reconciliation), Battle#pbJudge
+    # (drains buffered HP syncs) and Battle#pbSwitchInBetween (broadcasts /
+    # waits for a switch choice) in BattleSync layers. A Marshal snapshot
+    # inherits ALL of them, and they consult module-level sync state that no
+    # per-instance override can neutralise — so Engine 2.0 refuses to simulate
+    # instead of touching the peer connection.
+    def sync_context_active?(live)
+      already_twin = live.is_a?(TwinBattle) ||
+                     live.singleton_class.include?(TwinBehavior)
+      # A live battle currently driven by the sync RNG is in a synced phase.
+      if !already_twin && live.respond_to?(:anil_rework_rng) && live.anil_rework_rng
+        return true
+      end
+      return false unless defined?(AnilLanRework) && defined?(AnilLanRework::BattleSync)
+      bs = AnilLanRework::BattleSync
+      return false unless bs.respond_to?(:active_context)
+      !bs.active_context.nil?
+    rescue StandardError
+      true   # isolation cannot be proven -> refuse
+    end
+
     # Builds a twin from a live battle by Marshal-snapshotting the ENTIRE
     # battle object (with the scene swapped out for a NullScene, since real
     # scenes hold undumpable RGSS sprites). This copies every piece of state
@@ -349,10 +427,16 @@ module CoachEngine2
     # hand, so nothing can be missed or re-bound incorrectly. The live battle
     # is restored before returning (only its @scene is touched, briefly).
     #
-    # Raises if the battle graph holds anything else undumpable (e.g. a
-    # network socket in a multiplayer battle); the caller treats that as
-    # "coach unavailable for this battle".
+    # Raises TwinIsolationError if the battle is inside an active BattleSync
+    # context (see sync_context_active?) and raises if the battle graph holds
+    # anything else undumpable (e.g. a network socket); the caller treats both
+    # as "coach unavailable for this battle".
     def snapshot_twin(live, rng: nil)
+      if !CoachEngine2.allow_sync_twins && sync_context_active?(live)
+        raise TwinIsolationError,
+              "refusing to snapshot a battle inside an active BattleSync context " \
+              "(a simulated round would exchange packets with the peer)"
+      end
       saved_scene = live.instance_variable_get(:@scene)
       live.instance_variable_set(:@scene, NullScene.new)
       begin
@@ -362,7 +446,9 @@ module CoachEngine2
       end
       copy.extend(TwinBehavior)
       copy.init_coach_ivars(rng)
-      # Route the multiplayer-sync patched rand/pbRandom into our RNG.
+      # Route the multiplayer-sync patched rand/pbRandom into our RNG
+      # (init_coach_ivars already does this; kept explicit because the adapter
+      # must point at the FINAL rng of the twin).
       if copy.respond_to?(:anil_rework_rng=)
         copy.anil_rework_rng = TwinBattle::CoachRNGAdapter.new(copy.coach_rng)
       end
