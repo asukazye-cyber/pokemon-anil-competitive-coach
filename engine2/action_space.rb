@@ -68,15 +68,38 @@ module CoachEngine2
       out
     end
 
+    # Struggle in engine choice format (used when a :revealed-policy foe
+    # model has no observed moves to choose from).
+    def struggle_choice(battle, idxBattler)
+      [:UseMove, -1, battle.struggle, -1]
+    end
+
     # Joint actions for one side: array of {idxBattler => choice}.
     # (Single battle = one battler per side → flat list of single-entry hashes.)
-    def side_actions(battle, side)
+    # beliefs: optional BeliefState; when the foe side is generated under the
+    # :revealed policy, unobserved moves are excluded (never treated as
+    # known) and switches remain full.
+    def side_actions(battle, side, beliefs: nil, foe_info: :full)
       idxs = battle.battlers.each_index.select do |i|
         b = battle.battlers[i]
         b && !b.fainted? && (i % 2 == side)
       end
       return [] if idxs.empty?
-      per_battler = idxs.map { |i| actions_for(battle, i) }
+      per_battler = idxs.map do |i|
+        acts = actions_for(battle, i)
+        if beliefs && side != 0 && foe_info == :revealed
+          acts = acts.select do |c|
+            case c[0]
+            when :UseMove then c[1] == -1 || beliefs.move_observed?(battle, i, c[2])
+            else true   # switches stay available
+            end
+          end
+          # A foe with no observed usable move keeps only switches; if it
+          # has none either, Struggle keeps the round valid.
+          acts = [struggle_choice(battle, i)] if acts.empty?
+        end
+        acts
+      end
       product = [{}]
       idxs.each_with_index do |i, k|
         return [] if per_battler[k].empty?   # a side with no action can't act

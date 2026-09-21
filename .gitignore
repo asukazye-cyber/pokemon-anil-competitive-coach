@@ -5,5 +5,4 @@
 Thumbs.db
 outputs/
 build/
-tests/headless/Data/*.dat
 .rubyrun_last_error.txt

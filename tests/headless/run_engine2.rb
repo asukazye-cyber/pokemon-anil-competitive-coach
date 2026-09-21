@@ -11,6 +11,7 @@ tests = %w[
   t2_mandatory
   t3_from_live
   t4_integration
+  t6_search2
 ]
 tests.each do |t|
   puts "===== #{t} ====="

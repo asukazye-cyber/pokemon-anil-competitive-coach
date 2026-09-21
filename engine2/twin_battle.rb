@@ -153,11 +153,16 @@ module CoachEngine2
     attr_writer :turnCount
     attr_accessor :coach_next_replacements  # {battler_index => party_index}
     attr_accessor :coach_events             # informational events (msg strings)
+    # Battler indices whose replacement was forced by a faint this round and
+    # NOT preset by the controller (the search re-runs such rounds once per
+    # candidate replacement to enumerate the decision).
+    attr_accessor :coach_forced_replacements
 
     def init_coach_ivars(rng)
       @coach_rng = rng || DeterministicRNG.new(policy: :median)
       @coach_next_replacements = {}
       @coach_events = []
+      @coach_forced_replacements = []
     end
   end
 
@@ -216,7 +221,25 @@ module CoachEngine2
     # TurnDriver#step!'s replacements argument instead).
     def pbGetReplacementPokemonIndex(idxBattler, random = false)
       preset = @coach_next_replacements[idxBattler]
-      return preset if !preset.nil? && pbCanSwitchIn?(idxBattler, preset)
+      if !preset.nil? && pbCanSwitchIn?(idxBattler, preset)
+        return preset
+      end
+      @coach_forced_replacements.push(idxBattler)
+      coach_pick_first_able(idxBattler)
+    end
+
+    # The engine's pbEORSwitch calls THIS (not pbGetReplacementPokemonIndex)
+    # when the OPPONENT replaces a fainted Pokémon — hook it identically.
+    def pbSwitchInBetween(idxBattler, _checkCanSwitch = true, _random = false)
+      preset = @coach_next_replacements[idxBattler]
+      if !preset.nil? && pbCanSwitchIn?(idxBattler, preset)
+        return preset
+      end
+      @coach_forced_replacements.push(idxBattler)
+      coach_pick_first_able(idxBattler)
+    end
+
+    def coach_pick_first_able(idxBattler)
       party = pbParty(idxBattler)
       idx_start, _idx_end = pbTeamIndexRangeFromBattlerIndex(idxBattler)
       (idx_start...party.length).each do |i|

@@ -32,10 +32,14 @@ python3 tools/rubyrun.py package/dist/ruby+stdlib.wasm file tests/headless/boot.
 ```
 
 Current status: T1 10/10, T2 (the six mandatory scenarios) 17/17, T3 8/8,
-T4 8/8, shipped-rxdata smoke PASS. Scope and known limitations are listed in
-AUDIT.md §4/§7 — most importantly: chance nodes are currently collapsed by
-a median roll policy (values are estimates, not exact probabilities), and
-native in-game performance has not been measured in this environment.
+T4 8/8, T6 (exact chance / adaptive pruning / replacements / beliefs) 21/21,
+shipped-rxdata smoke PASS — 64 checks + smoke, all against the real engine
+with real data. Chance events are enumerated with probabilities measured
+against the engine itself (accuracy thresholds via bisection, crit rates
+from the engine's own rolls, damage bands exact per roll); remaining
+approximations are explicit and listed in AUDIT.md §4/§7 (one path-altering
+branch per round, mid-band damage quadrature at :coarse, uncalibrated
+evaluator, native performance unmeasured).
 
 **Important:** the supplied baseline contains Coach code through **v27**. Do not assume a conversational v28 exists unless it is present in the repository.
 

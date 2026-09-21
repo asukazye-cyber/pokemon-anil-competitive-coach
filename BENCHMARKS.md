@@ -7,54 +7,44 @@ Native desktop and JoiPlay/Android performance will differ (expected faster
 on native desktop; variable on JoiPlay) — those numbers are NOT claimed
 here. Re-run `tests/headless/bench.rb` on target hardware for local figures.
 
-## Search benchmarks (via `tests/headless/bench.rb`)
+## Search benchmarks (exact chance enumeration ON, desktop budget)
 
-Config: `:adversarial` foe model unless noted; budgets as shipped
-(desktop: depth 3 / 300 rounds / 3000 ms; joiplay: depth 2 / 100 rounds /
-1800 ms).
+Budgets as shipped: desktop = depth 3 / 600 rounds / 3000 ms / ε 0.02 /
+chance :on (coarse); joiplay = depth 2 / 150 rounds / 2000 ms / ε 0.03 /
+chance :root.
 
-| Scenario | Best | Value | nodes | rounds | depth | ms | rounds/s | TT hit/store |
-|---|---|---|---|---|---|---|---|---|
-| A trivial Lv100 vs Lv3 (desktop) | Tierra Viva | 1.00 | 6 | 6 | 3 | 113 | 52.9 | 0/0 |
-| B even 1v1 (desktop) | Surf | 0.44 | 95 | 95 | 3 | 3018 | 31.5 | 1/10 |
-| C 2-mon side w/ switches (desktop) | Surf | 0.46 | 97 | 103 | 3 | 3008 | 34.2 | 0/11 |
-| D same, foe = game AI (desktop) | Surf | 0.68 | 51 | 51 | 3 | 2352 | 21.7 | 1/14 |
-| E 2-mon side (joiplay budget) | Surf | 0.46 | 52 | 54 | 2 | 1821 | 29.7 | 0/5 |
-| F low-HP endgame, depth 4 | Surf | 0.44 | 32 | 32 | 4 | 1128 | 28.4 | 2/12 |
-
-## Unit costs
-
-| Operation | Cost |
-|---|---|
-| Raw round execution (Marshal clone + full `pbAttackPhase` + `pbEndOfRoundPhase`) | ~31 ms/round (30 rounds, 932 ms) |
-| Full boot (engine + data) in wasm | ~45 s (test-driver startup; irrelevant to in-game use) |
-| from_live snapshot (T3) | included in search budgets above |
+| Scenario | Best | Value | nodes | rounds | depth | ms | rounds/s |
+|---|---|---|---|---|---|---|---|
+| A trivial Lv100 vs Lv3 (desktop) | Tierra Viva | 1.00 | 2 | 16 | 1 | 332 | 48.2 |
+| B even 1v1 (desktop) | Surf | 0.44 | 13 | 72 | 2 | 3100 | 23.2 |
+| C 2-mon side w/ switches (desktop) | Surf | 0.46 | 66 | 67 | 2 | 3051 | 22.0 |
+| D same, foe = game AI (desktop) | Surf | 0.64 | 74 | 56 | 3 | 3189 | 17.6 |
+| E 2-mon side (joiplay budget) | Surf | 0.46 | 58 | 48 | 2 | 2088 | 23.0 |
+| F low-HP endgame, depth-4 budget | Surf | 0.44 | 15 | 64 | 2 | 3067 | 20.9 |
+| G raw round unit cost | — | — | — | 30 | — | 1135 | 37.8 ms/round |
 
 ## Reading the numbers
 
-- **Adaptive depth works within budget**: the trivial position (A) solves to
-  a proven win (W = 1.0, terminal decision) in 6 rounds / 113 ms, while even
-  midgame positions (B/C) spend the full budget and reach depth 3.
-- **Budgets are respected**: every scenario terminates within its time/node
-  budget; the search returns the deepest completed iteration's best action.
-- **Throughput** is ~22–34 search rounds/s in this wasm environment
-  (B–E). A native desktop CPU is expected to be several times faster;
-  JoiPlay varies by device.
-- **TT effectiveness** is currently modest (hit counts single digits at
-  these depths) — expected, since the search rarely revisits identical
-  states within 2–3 rounds. Deeper searches will amortize it.
-- **game AI foe model** (D) is cheaper per node in foe branching but slower
-  per round (the game AI's own scoring runs per node) and yields a HIGHER
-  value (0.68 vs 0.46) than the adversarial model — consistent with an
-  optimal-play assumption being more pessimistic than the game's AI.
+- **Exact chance costs depth, honestly reported**: each chance node now
+  executes ~4–6 rounds (probe + pinned branches) instead of 1, so within
+  the same 3 s budget midgame positions complete depth 2 (they reached 3
+  with the old collapsed-chance search). Trivial positions still solve to
+  PROVEN wins (A: W = 1.0, terminal, in 0.3 s — iterative deepening stops
+  early by design). The game-AI foe model (D) reaches depth 3 because it
+  has a single foe branch.
+- **Adaptive depth is visible**: A stops at depth 1 because the win is
+  proven (not a failure — a solved search). Small root action spaces and
+  endgames (≤2 able mons) get +2 depth and :fine chance granularity.
+- **Budgets respected everywhere**; ε-pruning and the mass fold keep chance
+  nodes within bounds with per-node error ≤ ε (pessimistic side).
+- **Throughput** ~18–23 search rounds/s in this wasm environment. A native
+  desktop CPU is expected to be several times faster; JoiPlay varies.
 
-## Engine 2.0 budgets as shipped (integration.rb)
+## What the T6 suite proves about search quality (not speed)
 
-| Profile | depth | round budget | time budget | foe branching | our branching |
-|---|---|---|---|---|---|
-| desktop | 3 | 300 | 3000 ms | 5 | 14 |
-| joiplay | 2 | 100 | 1800 ms | 4 | 10 |
-
-Profile auto-detection prefers JoiPlay when Android markers are present;
-override with `CoachEngine2::CONFIG[:profile]`. Disable entirely with
-`CoachEngine2.enabled = false` (falls back to the pre-2.0 Coach chain).
+- Expectimax decomposition: at depth 1 the search value equals
+  Σ pᵢ·eval(childᵢ) over the same enumerated outcomes exactly.
+- ε-pruning: |value(ε=0) − value(ε=0.45)| ≤ 0.45 and prunes actually fire.
+- Determinism: identical config → identical value and action.
+- Replacement enumeration: value becomes party-order independent; the
+  adversary assumes the foe's best counter (Tyranitar over Blissey).

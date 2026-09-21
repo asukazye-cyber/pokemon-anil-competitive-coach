@@ -24,8 +24,10 @@ module CoachEngine2
     HP_WEIGHT     = 0.40   # raw survivability
     STATUS_WEIGHT = 0.15   # afflictions
 
-    def initialize(viewpoint_side = 0)
+    def initialize(viewpoint_side = 0, beliefs: nil, foe_info: :full)
       @side = viewpoint_side
+      @beliefs = beliefs
+      @foe_info = foe_info
     end
 
     # battle: TwinBattle (or any real Battle). Returns [0.0, 1.0].
@@ -55,8 +57,17 @@ module CoachEngine2
         hp_frac = pkmn.hp.to_f / pkmn.totalhp
         threat = 0.0
         speed_factor = 0.0
-        pkmn.moves.each do |pm|
-          move_data = GameData::Move.try_get(pm.id)
+        # Under the :revealed policy the foe's UNOBSERVED moves must not be
+        # treated as known: they are excluded from threat (documented
+        # optimistic bias); species/stats stay public once active.
+        moves_for_threat = pkmn.moves
+        if @beliefs && side == 1 && @foe_info == :revealed
+          owner = battle.battlers.select { |b| b && !b.fainted? && b.index % 2 == 1 }
+                        .find { |b| b.pokemon.equal?(pkmn) }
+          moves_for_threat = owner ? @beliefs.threat_moves_for(battle, owner.index) : []
+        end
+        moves_for_threat.each do |pm|
+          move_data = GameData::Move.try_get(pm.respond_to?(:id) ? pm.id : pm)
           next unless move_data
           foe_active.each do |fb|
             # Real effectiveness from the engine's own tables.

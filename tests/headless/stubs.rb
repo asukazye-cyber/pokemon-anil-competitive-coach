@@ -169,6 +169,10 @@ end
 # RGSS data helpers -----------------------------------------------------------
 
 HEAD_DIR = "/work/tests/headless"
+# GameData loads "Data/<name>.dat" relative to the process cwd; the harness
+# keeps the game's data (originals + generated types.dat) in the TRACKED
+# repo-root Data/ directory so it survives environment restores.
+DATA_DIR = "/work/Data"
 # Marshal restores RGSS-dumped strings as ASCII-8BIT under WASI; the game's
 # translation layer expects UTF-8. Recursively re-tags every string after load
 # (PBS data contains no genuinely binary strings).
@@ -196,9 +200,14 @@ def _deep_force_utf8(obj, seen = {}.compare_by_identity)
 end
 
 def load_data(path)
-  unless path.is_a?(String) && path.start_with?("/")
-    alt = File.join(HEAD_DIR, path)
-    path = alt if File.exist?(alt)
+  if path.is_a?(String) && !path.start_with?("/")
+    if path.start_with?("Data/")
+      alt = File.join(DATA_DIR, path.sub(%r{\AData/}, ""))
+      path = alt if File.exist?(alt)
+    else
+      alt = File.join(HEAD_DIR, path)
+      path = alt if File.exist?(alt)
+    end
   end
   return nil if path.is_a?(String) && !File.exist?(path)
   _deep_force_utf8(Marshal.load(File.binread(path)))

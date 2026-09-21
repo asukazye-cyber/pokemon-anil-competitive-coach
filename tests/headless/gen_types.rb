@@ -65,7 +65,7 @@ known.each_with_index do |t, i|
   )
 end
 
-path = "/work/tests/headless/Data/types.dat"
+path = "/work/Data/types.dat"
 File.binwrite(path, Marshal.dump(data))
 puts "[gen_types] wrote #{path} with #{data.size} types"
 

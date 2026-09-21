@@ -81,13 +81,23 @@ begin
         !is_switch_to_malamar,
         "best=#{best.inspect} value=#{res.value.round(3)} #{res.metrics.report}")
 
-  # And the switch line must be strictly worse than the best line.
-  # Compute the switch line's value explicitly: successor after switch+EQ.
+  # Same-horizon comparison: the recommended action's 1-round successor must
+  # evaluate no worse than the switch line's 1-round successor (Malamar KO'd).
   switch_state = clone
   v_switch = CoachEngine2::Evaluator.new(0).win_probability(switch_state)
-  check("T1 switch line evaluated worse than recommendation",
-        v_switch <= res.value + 0.001,
-        "v_switch=#{v_switch.round(3)} v_best=#{res.value.round(3)}")
+  best = res.action && res.action[0]
+  move_state = Marshal.load(Marshal.dump(battle))
+  md = CoachEngine2::TurnDriver.new(move_state)
+  if best && best[0] == :UseMove
+    md.inject!(0 => md.move_choice(0, best[1]), 1 => md.move_choice(1, 0))
+  else
+    md.inject!(0 => md.switch_choice(0, 1), 1 => md.move_choice(1, 0))
+  end
+  md.step!
+  v_move = CoachEngine2::Evaluator.new(0).win_probability(move_state)
+  check("T1 switch line evaluated worse at equal horizon",
+        v_switch <= v_move + 0.001,
+        "v_switch=#{v_switch.round(3)} v_move=#{v_move.round(3)}")
 rescue => e
   check("T1 raised", false, "#{e.class}: #{e.message}")
   (e.backtrace || [])[0, 6].each { |l| puts "    #{l}" }

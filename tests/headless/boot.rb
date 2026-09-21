@@ -6,7 +6,7 @@
 # Layout (mounted at /work):
 #   /work/src/extracted_scripts/NNN_*.rb   the game's scripts (source of truth)
 #   /work/data/*.dat                       real PBS marshal data
-#   /work/tests/headless/Data/*.dat        same + generated types.dat
+#   /work/Data/*.dat                       same + generated types.dat (tracked)
 #   /work/engine2/*.rb                     Engine 2.0 sources (loaded last)
 #===============================================================================
 

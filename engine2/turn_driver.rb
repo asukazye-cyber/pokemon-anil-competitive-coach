@@ -83,12 +83,74 @@ module CoachEngine2
     def step!(replacements = {})
       @battle.coach_next_replacements.replace(replacements)
       @battle.coach_events.clear
+      @battle.coach_forced_replacements.clear
       @battle.pbAttackPhase
       if @battle.decision == 0
         @battle.pbEndOfRoundPhase
         @battle.turnCount += 1 if @battle.decision == 0
       end
       @battle.decision
+    end
+
+    #-------------------------------------------------------------------------
+    # One full successor construction: clone -> localize choices -> execute a
+    # real round. Used by both the search and the chance enumerator, so ALL
+    # successor states keep coming from a single authority.
+    #   ours/foes: {idxBattler => choice} (nil entries fall back to the
+    #   engine's own forced choice or, as a last resort, the game AI).
+    #   rng: fresh DeterministicRNG for this run (pins = roll overrides).
+    #   replacements: {idxBattler => party_index} presets for forced switch-ins.
+    # Returns [clone, decision, rng].
+    #-------------------------------------------------------------------------
+    def self.execute(state, ours: nil, foes: nil, rng: nil, replacements: {},
+                     foe_ai: nil, beliefs: nil)
+      clone = Marshal.load(Marshal.dump(state))
+      rng ||= DeterministicRNG.new(policy: :median)
+      clone.coach_rng = rng
+      if clone.respond_to?(:anil_rework_rng=)
+        clone.anil_rework_rng = TwinBattle::CoachRNGAdapter.new(rng)
+      end
+      drv = new(clone)
+      actions = {}
+      assign_side(clone, 0, ours, actions, foe_ai, beliefs)
+      assign_side(clone, 1, foes, actions, foe_ai, beliefs)
+      drv.inject!(actions)
+      decision = drv.step!(replacements)
+      [clone, decision, rng]
+    end
+
+    # The engine keeps its AI in an ivar with no public reader.
+    def self.ai_of(battle)
+      ai = battle.instance_variable_get(:@battleAI)
+      return ai if ai
+      ai = Battle::AI.new(battle)
+      ai.create_ai_objects
+      battle.instance_variable_set(:@battleAI, ai)
+      ai
+    end
+
+    def self.assign_side(battle, side, joint, actions, foe_ai = nil, beliefs = nil)
+      battle.battlers.each_with_index do |b, i|
+        next unless b && !b.fainted? && i % 2 == side
+        if joint.is_a?(Hash) && joint.key?(i)
+          actions[i] = joint[i]
+        elsif ActionSpace.forced_choice?(battle, i)
+          actions[i] = battle.choices[i]          # engine's own locked choice
+        elsif side == 1 && joint == :game_ai
+          battle.pbClearChoice(i)
+          ai_of(battle).pbDefaultChooseEnemyCommand(i)
+          actions[i] = battle.choices[i]
+        elsif side == 1 && beliefs && !joint.is_a?(Hash)
+          # No explicit foe action; :revealed policy restricts the fallback
+          # (game AI reads the real moveset, which :revealed forbids).
+          actions[i] = ActionSpace.struggle_choice(battle, i)
+        else
+          battle.pbClearChoice(i)
+          ai_of(battle).pbDefaultChooseEnemyCommand(i)
+          actions[i] = battle.choices[i]
+        end
+      end
+      actions
     end
 
     #-------------------------------------------------------------------------

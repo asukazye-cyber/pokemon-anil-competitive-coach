@@ -129,9 +129,11 @@ Honest scope statement — what the search is and is not today:
 | T2 mandatory regressions | 17/17 | the six AGENT_PROMPT scenarios: Steelix KO-on-entry (no false safe switch; sack must be explicit), faster Heracross OHKO (no posthumous action value), Glimmora free KO preserved (value 1.0, no hard-switch), No Guard + Thunder under all roll policies and max evasion, Contrary + Superpower inversion/compounding/effect-on-damage, out-of-battle isolation. |
 | T3 from_live | 8/8 | Marshal-snapshot fidelity: state equality, identical successors under identical actions (differential), scene restoration, snapshot-of-snapshot, search on mid-battle snapshots. |
 | T4 integration | 8/8 | HUD hash contract, per-(turn,HP) caching, disable switch with clean fallback to the pre-2.0 chain (the old v5–v18 chain is genuinely loaded in the headless boot and its hash was served), foe side never coached, budgets, structural isolation. |
-| T5 rxdata smoke | PASS | the SHIPPED `game/Scripts.rxdata` is parsed by an independent reader inside the Ruby runtime, section 617 evaluated, and it produces a correct recommendation (W=100% free-KO line). |
+| T5 rxdata smoke | PASS | the SHIPPED `game/Scripts.rxdata` is parsed by an independent reader inside the Ruby runtime, section 617 evaluated (all 8 engine2 files incl. chance/beliefs), and it produces a correct recommendation (W=100% free-KO line). |
+| T6 milestones | 21/21 | exact chance: probabilities sum to 1, Thunder p_miss = 0.30 measured, No Guard single-outcome, damage bands {1/16,1/16,14/16}, crit 1/24 at :fine; expectimax decomposition equals Σ p·eval exactly; ε pruning bounded + fires; deterministic; adaptive depth boosts; KO extensions; replacement enumeration (order independence, adversarial foe counter); beliefs (:revealed excludes unobserved moves). |
 | Rxdata build | verified | 617 entries; 616 originals byte-identical (raw blobs reused); new section last; inflated content equals the engine2 concatenation byte-for-byte. Baseline checksum unchanged. |
 | Benchmarks | see BENCHMARKS.md | measured in this sandbox (wasm32-wasi). No native/desktop numbers are claimed. |
+| Full suite | **64/64 + smoke** | T1 10 + T2 17 + T3 8 + T4 8 + T6 21, plus the shipped-rxdata smoke, all against the real engine + real data. |
 
 Environment: Ruby 3.3.3 wasm32-wasi under wasmtime 48 (Python driver); real
 PBS data; real engine scripts. What could NOT be tested here: actual RGSS
@@ -140,18 +142,21 @@ CPU performance. The HUD path is exercised only up to the hash contract.
 
 ## 7. Known limitations
 
-1. Chance nodes are collapsed (:median policy) — see §4. Values are
-   estimates, not exact win probabilities, except at terminal decisions.
-2. In-game `from_live` Marshal-dumps the live battle; if any battle variant
+1. Per round, one path-altering chance event (the first accuracy roll) is
+   branched; later accuracy rolls and secondary-effect procs keep the
+   :median policy (counted in metrics as unbranched). Damage magnitude is
+   discretized at :coarse (mid band quadrature).
+2. Replacement enumeration covers one forced battler per side per round
+   (singles). Doubles products are a documented next step.
+3. In-game `from_live` Marshal-dumps the live battle; if any battle variant
    holds an undumpable object beyond the scene (e.g. a network socket), the
    coach degrades to the old chain for that battle (rescue path tested in
    T4). Unverified against the real multiplayer client.
-3. Forced replacements after faints are auto-picked (first able) rather than
-   enumerated; deliberate-sac versus forced-sac distinction at the search
-   level will need replacement enumeration (API exists).
-4. Foe action space uses the visible opposing team; no belief modeling of
-   unrevealed Pokémon yet.
+4. `:revealed` belief policy is optimistic when the foe has unobserved
+   moves (undercounts their options); default `:full` uses only what the
+   client's own battle object legitimately contains.
 5. The evaluator is uncalibrated (no playtest data yet); only its ordering
-   properties are relied upon in tests.
-6. Synchronous computation on menu open (desktop ≤3 s, JoiPlay ≤1.8 s
+   properties are relied upon in tests. Exact values come from terminal
+   decisions and the enumerated chance decomposition.
+6. Synchronous computation on menu open (desktop ≤3 s, JoiPlay ≤2 s
    budgets). No background thread yet.

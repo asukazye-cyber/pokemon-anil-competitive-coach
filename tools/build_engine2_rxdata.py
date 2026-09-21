@@ -29,6 +29,8 @@ ENGINE2_FILES = [
     "twin_battle.rb",
     "turn_driver.rb",
     "action_space.rb",
+    "chance.rb",
+    "beliefs.rb",
     "eval.rb",
     "search.rb",
     "integration.rb",

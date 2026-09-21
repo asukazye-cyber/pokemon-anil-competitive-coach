@@ -2,6 +2,51 @@
 
 ## [Unreleased] — Coach Engine 2.0
 
+### Added (milestone update: exact chance, adaptive pruning, beliefs)
+
+- **Exact chance enumeration** (`engine2/chance.rb`): round outcomes
+  enumerated with probabilities MEASURED against the real engine — accuracy
+  thresholds by bisection on standalone `pbAccuracyCheck` calls, crit rates
+  from the engine's own roll request, damage variance as 3-point (:coarse)
+  or 16-point (:fine) uniform bands. Rolls are classified by the engine's
+  own call stack; every pinned branch is verified (pin-landing + state
+  equality); unbranched events are counted, never silent. No Guard /
+  100%-accuracy moves correctly produce no branch.
+- **Expectiminimax search** (`engine2/search.rb` rewritten): chance nodes
+  with exact event probabilities; Star1-style ε-bounded chance pruning
+  (pessimistic bounds — pruning never flatters a line); α-β with TT value
+  bounds; aspiration windows with re-search; late-move reductions;
+  extensions for KO rounds and forcing lines; small-root/endgame depth
+  boosts with :fine granularity in endgames.
+- **Forced-replacement enumeration**: a faint that forces a switch-in is a
+  DECISION node — our replacements under MAX (deliberate sacrifice is
+  explicit and rated), the foe's under MIN (their counter is assumed).
+  Verified party-order independence and adversarial counter assumption.
+  Hooks both engine paths (player `pbGetReplacementPokemonIndex`, foe
+  `pbSwitchInBetween`).
+- **Opponent beliefs** (`engine2/beliefs.rb`): explicit BeliefState over
+  observed foe moves (from the engine's own `@movesUsed`/`@lastMoveUsed`
+  records — client-visible history). Policies: `:full` (default; uses only
+  what the client's battle object legitimately holds) and `:revealed`
+  (models only observed moves; documented optimistic bias). ActionSpace and
+  Evaluator honor the policy.
+- **T6 milestone suite** (21 checks): probability sums, measured Thunder
+  miss = 0.30, No Guard single-outcome, damage band weights, crit 1/24,
+  exact expectimax decomposition, ε-bound + firing, determinism, adaptive
+  depth, KO extensions, replacement enumeration (order independence,
+  adversarial foe), belief filtering.
+- **Tracked harness data**: `Data/` (game .dat + generated types.dat) is now
+  committed so the headless suite survives environment restores.
+
+### Fixed
+
+- Shipped rxdata section now includes ALL engine2 files (chance.rb and
+  beliefs.rb were missing from the build list — caught by the shipped-
+  artifact smoke test falling back to the old coach chain).
+- `@priority` entries are `[battler, ...]` (battler objects, not indices).
+- Foe forced replacements go through `pbSwitchInBetween`, not
+  `pbGetReplacementPokemonIndex` — both hooked now.
+
 ### Added
 
 - **Engine 2.0 core** (`engine2/`): `TwinBattle`/`TwinBehavior` (real

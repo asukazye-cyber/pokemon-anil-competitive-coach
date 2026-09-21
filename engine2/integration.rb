@@ -29,10 +29,12 @@ module CoachEngine2
     # budgets to keep the menu responsive on weaker hardware.
     profile: nil,
     budgets: {
-      desktop: { max_depth: 3, node_budget: 300, time_budget_ms: 3000,
-                 foe_branching: 5, our_branching: 14 },
-      joiplay: { max_depth: 2, node_budget: 100, time_budget_ms: 1800,
-                 foe_branching: 4, our_branching: 10 }
+      desktop: { max_depth: 3, node_budget: 600, time_budget_ms: 3000,
+                 foe_branching: 5, our_branching: 14,
+                 chance: :on, chance_granularity: :coarse, eps: 0.02 },
+      joiplay: { max_depth: 2, node_budget: 150, time_budget_ms: 2000,
+                 foe_branching: 4, our_branching: 10,
+                 chance: :root, chance_granularity: :coarse, eps: 0.03 }
     }.freeze,
     foe_model: :adversarial
   }.freeze
