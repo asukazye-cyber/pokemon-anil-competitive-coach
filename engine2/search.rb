@@ -65,9 +65,13 @@ module CoachEngine2
       end
 
       def report
+        # NOTE: every field is separated — `ch=2/60` used to be ambiguous
+        # between (2 nodes, 60 outcomes) and (2 nodes, 6 outcomes, 0
+        # unbranched), which hid exactly the metric that reports silent
+        # chance approximations.
         "nodes=#{@nodes} rounds=#{@rounds_run} lines=#{@lines_evaluated} " \
-        "depth=#{@max_depth_reached} ch=#{@chance_nodes}/#{@chance_outcomes}" \
-        "#{"!" if @unbranched > 0}#{@unbranched} epsPr=#{@eps_prunes} " \
+        "depth=#{@max_depth_reached} ch=#{@chance_nodes}/#{@chance_outcomes} " \
+        "unb=#{@unbranched}#{'!' if @unbranched > 0} epsPr=#{@eps_prunes} " \
         "ext=#{@extensions} lmr=#{@reductions} repl=#{@repl_expansions} " \
         "tt=#{@tt_hits}/#{@tt_stores} af=#{@aspiration_fails} " \
         "b_eff=#{format('%.1f', effective_branching)} ms=#{@elapsed_ms.to_i} " \
@@ -101,7 +105,24 @@ module CoachEngine2
       tt: true
     }.freeze
 
-    attr_reader :metrics, :config
+    attr_reader :metrics
+
+    # The merged configuration actually in force (DEFAULT_CONFIG + overrides).
+    def config
+      @cfg
+    end
+
+    # External cancellation (integration deadline, scene close, menu cancel).
+    # The search stops at the next node boundary and returns the best value
+    # found so far; `budget_exhausted?` is what every loop consults.
+    def abort!
+      @abort = true
+      self
+    end
+
+    def aborted?
+      @abort
+    end
 
     def initialize(battle, viewpoint_side: 0, config: {})
       @battle = battle
@@ -291,13 +312,21 @@ module CoachEngine2
       @metrics.chance_nodes += 1
       use_chance = chance_ok && @cfg[:chance] != :off
       granularity = @cfg[:chance_granularity]
-      granularity = :fine if @cfg[:chance] == :on && alive_count(state) <= 2
+      max_outcomes = @cfg[:max_outcomes]
+      if @cfg[:chance] == :on && alive_count(state) <= 2
+        # Endgames are where an exact crit/damage-roll enumeration pays off,
+        # but only if the outcome budget can actually HOLD it: a :fine
+        # enumeration truncated to a :coarse-sized cap folds most of the
+        # damage distribution into its mid band, which is worse than the exact
+        # coarse quadrature. Upgrade only when the cap covers :fine.
+        granularity = :fine if max_outcomes >= ChanceEnumerator::MAX_FINE_BRANCHES
+      end
 
       outcomes =
         if use_chance
           ChanceEnumerator.enumerate(state, ours: ours, foes: foes,
                                      granularity: granularity,
-                                     max_outcomes: @cfg[:max_outcomes],
+                                     max_outcomes: max_outcomes,
                                      metrics: @metrics)
         else
           child, _dec, = TurnDriver.execute(state, ours: ours, foes: foes)
@@ -351,9 +380,13 @@ module CoachEngine2
       end
 
       # Singles only for now: enumerate when exactly ONE battler per side
-      # needs a replacement (documented limitation for doubles).
-      our_cands = our_forced.length == 1 ? replacement_candidates(state, our_forced[0]).first(@cfg[:our_repl_cap]) : []
-      foe_cands = foe_forced.length == 1 ? replacement_candidates(state, foe_forced[0]).first(@cfg[:foe_repl_cap]) : []
+      # needs a replacement (documented limitation for doubles). Candidates
+      # come from the CHILD (post-round) state: that is where the replacement
+      # happens, so a Pokémon that fainted in the same round is correctly
+      # excluded instead of being offered and then silently rejected by the
+      # engine's own pbCanSwitchIn? during the re-run.
+      our_cands = our_forced.length == 1 ? replacement_candidates(child, our_forced[0]).first(@cfg[:our_repl_cap]) : []
+      foe_cands = foe_forced.length == 1 ? replacement_candidates(child, foe_forced[0]).first(@cfg[:foe_repl_cap]) : []
       @metrics.repl_expansions += 1
 
       best = -1.0
@@ -441,19 +474,22 @@ module CoachEngine2
                                       beliefs: side == 1 ? @beliefs : nil,
                                       foe_info: @cfg[:foe_info])
       if list.length > 1
-        list = list.sort_by { |joint| -joint.values.sum { |c| action_score(state, c) } }
+        list = list.sort_by { |joint| -joint.values.sum { |c| action_score(state, c, side) } }
       end
       list.first(cap)
     end
 
-    def action_score(state, choice)
+    # `side` is the side that OWNS the action: its targets are the battlers on
+    # the other side. Scoring the foe's replies against the foe's own team
+    # (what a hardcoded @side did) ranked their most dangerous answer last.
+    def action_score(state, choice, side = @side)
       case choice[0]
       when :UseMove
         move_data = GameData::Move.try_get(choice[2].respond_to?(:id) ? choice[2].id : choice[2])
         return 0.0 unless move_data && move_data.power.to_i > 0
-        foes = state.battlers.select { |x| x && !x.fainted? && x.index % 2 != @side }
-        return 0.0 if foes.empty?
-        foes.map do |f|
+        targets = state.battlers.select { |x| x && !x.fainted? && x.index % 2 != side }
+        return 0.0 if targets.empty?
+        targets.map do |f|
           eff = Effectiveness.calculate(move_data.type, *f.pokemon.types.compact) rescue 1.0
           move_data.power * eff
         end.max.to_f

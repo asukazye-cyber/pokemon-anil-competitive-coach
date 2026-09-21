@@ -10,10 +10,17 @@
 #
 #   * Accuracy: the threshold thr (hits iff roll < thr) is MEASURED by
 #     bisection on the engine's own pbAccuracyCheck call — no formulas
-#     copied, no extra round executions. Branches: hit (P = thr/max) and
+#     copied. Branches: hit (P = thr/max) and
 #     miss (P = 1 - thr/max). Not branched when thr == 0/max (one-sided).
-#     Identification of which move owns the roll is VERIFIED by an exact
-#     state-equality check; on any mismatch the event is not branched.
+#     The move that owns the roll is identified from the round's REAL
+#     execution order (the probe round's own @priority, filled by
+#     pbCalculatePriority) and from the choices that round actually executed
+#     — NEVER from the parent state's stale @priority/choices, which describe
+#     the PREVIOUS round and flip under Trick Room, priority moves, speed
+#     changes and switches. Identification is then PROVEN differentially:
+#     pinning the roll just below thr must reproduce the probe while pinning
+#     it at thr must change it (exactly one side may match). On any mismatch
+#     the event is not branched and is counted in metrics.
 #   * Critical: P(crit) = 1/ratio measured from the engine's own roll
 #     request (pbIsCritical? standalone call). Branched at :fine only.
 #   * Damage variance (uniform over 16 values): :coarse = 3-point
@@ -24,9 +31,11 @@
 # Probabilities of branched events multiply (independent draws) and always
 # sum to 1. The probe run (all-median) is reused as the outcome whose band
 # representatives are the median values themselves. Every pinned run is
-# verified (the roll consumed at index k must have the same max as in the
-# probe); a failing branch folds its probability into the largest outcome —
-# approximations are counted in metrics, never silent.
+# verified for pin-LANDING (the roll consumed at index k must have the same
+# max as in the probe AND the value we pinned); a branch that does not land,
+# or mass truncated by the outcome cap, goes into one extra [:folded]
+# outcome carrying the probe's (median) state — never into another branch's
+# probability. All approximations are counted in metrics, never silent.
 #===============================================================================
 
 module CoachEngine2
@@ -53,21 +62,45 @@ module CoachEngine2
       @metrics = opts[:metrics]
     end
 
+    # Branch count a full :fine enumeration can need (2 crit bands x 16 damage
+    # bands + the miss branch). Callers use it to decide whether an outcome
+    # budget can actually represent :fine instead of truncating most of it.
+    MAX_FINE_BRANCHES = 33
+
     def enumerate
-      probe_state, _d, probe_rng = run_with({})
-      probe_log = probe_rng.log
-      return [Outcome.new(state: probe_state, prob: 1.0, tags: [:deterministic], pins: {})] if probe_log.empty?
+      @probe_state, _d, probe_rng = run_with({})
+      @probe_log = probe_rng.log
+      if @probe_log.empty?
+        # No roll was recorded: either the round is genuinely roll-free, or
+        # this battle's pbRandom is not routed through the twin instrument.
+        # The second case must not pass for "deterministic" silently.
+        count_unbranched(:rng_not_instrumented) unless instrumented?(@probe_state, probe_rng)
+        return [Outcome.new(state: @probe_state, prob: 1.0, tags: [:deterministic], pins: {})]
+      end
 
-      acc_idx = first_index(probe_log, TAG_ACC)
-      dmg_idx = first_index(probe_log, TAG_DMG)
-      crit_idx = @granularity == :fine ? first_index(probe_log, TAG_CRIT) : nil
+      # Identification data comes from the round that ACTUALLY ran: its real
+      # execution order (pbCalculatePriority filled @priority) and the joint
+      # action it executed (TurnDriver records it as plain data — the engine
+      # clears @choices as battlers act). The parent state's @priority and
+      # @choices describe the PREVIOUS round and are wrong whenever the order
+      # flips.
+      @order = execution_order(@probe_state)
+      @probe_choices = probe_choices(@probe_state)
 
-      acc = build_acc_event(acc_idx, probe_log, probe_state)
+      acc_idx  = first_index(@probe_log, TAG_ACC)
+      dmg_idx  = first_index(@probe_log, TAG_DMG)
+      crit_idx = @granularity == :fine ? first_index(@probe_log, TAG_CRIT) : nil
+
+      acc = build_acc_event(acc_idx)
       dmg = dmg_idx && dmg_idx > (acc ? acc[:idx] : -1) ? { idx: dmg_idx } : nil
       crit = nil
       if crit_idx && crit_idx > (acc ? acc[:idx] : -1)
         ratio = measure_crit_ratio
-        crit = { idx: crit_idx, ratio: ratio } if ratio && ratio > 1
+        if ratio && ratio > 1
+          crit = { idx: crit_idx, ratio: ratio }
+        else
+          count_unbranched(:crit_unmeasured)
+        end
       end
 
       hit_p  = acc ? acc[:thr].to_f / acc[:max] : 1.0
@@ -75,9 +108,9 @@ module CoachEngine2
 
       # Band representatives: the probe's own values where they fall in the
       # band (so the probe run is reused), canonical values elsewhere.
-      acc_hit_val  = acc ? (probe_log[acc[:idx]][0] < acc[:thr] ? probe_log[acc[:idx]][0] : 0) : nil
-      acc_miss_val = acc ? (probe_log[acc[:idx]][0] >= acc[:thr] ? probe_log[acc[:idx]][0] : acc[:thr]) : nil
-      dmg_val      = dmg ? probe_log[dmg[:idx]][0] : nil
+      acc_hit_val  = acc ? (@probe_log[acc[:idx]][0] < acc[:thr] ? @probe_log[acc[:idx]][0] : 0) : nil
+      acc_miss_val = acc ? (@probe_log[acc[:idx]][0] >= acc[:thr] ? @probe_log[acc[:idx]][0] : acc[:thr]) : nil
+      dmg_val      = dmg ? @probe_log[dmg[:idx]][0] : nil
 
       dmg_bands =
         if !dmg
@@ -91,51 +124,53 @@ module CoachEngine2
         if !crit
           [[nil, 1.0]]
         else
-          [[0, 1.0 / crit[:ratio]], [probe_log[crit[:idx]][0], (crit[:ratio] - 1).to_f / crit[:ratio]]]
+          [[0, 1.0 / crit[:ratio]], [@probe_log[crit[:idx]][0], (crit[:ratio] - 1).to_f / crit[:ratio]]]
         end
-
-      # The probe is exactly: hit? (acc median value vs thr) + mid damage +
-      # no-crit (crit median value != 0 unless ratio == 1, excluded above).
-      probe_dmg_val = dmg ? dmg_val : nil
-      probe_is_hit = !acc || probe_log[acc[:idx]][0] < acc[:thr]
 
       outcomes = []
       branches = []
       crit_bands.each do |cv, cp|
-        next if cv.nil? && crit # no-crit band only
         dmg_bands.each do |dv, dp|
           pins = {}
-          pins[acc[:idx]] = acc_hit_val if acc && acc_hit_val
+          pins[acc[:idx]]  = acc_hit_val if acc && acc_hit_val
           pins[crit[:idx]] = cv if crit && cv
-          pins[dmg[:idx]] = dv if dmg && dv
-          tags = [:hit]
+          pins[dmg[:idx]]  = dv if dmg && dv
+          tags = acc ? [:hit] : []
           tags.push(:crit) if crit && cv == 0
           branches.push([pins, hit_p * cp * dp, tags])
         end
       end
       branches.push([{ acc[:idx] => acc_miss_val }, miss_p, [:miss]]) if acc && acc_miss_val
 
+      # Most probable first, so the outcome cap drops the least significant
+      # branches. The folded mass is the TAIL OF THIS ORDER — slicing the
+      # unsorted list mis-accounted which branches were skipped.
+      ordered = branches.sort_by { |_p, prob, _t| -prob }
       processed = 0
-      branches.sort_by { |_p, prob, _t| -prob }.each do |pins, prob, tags|
+      ordered.each do |pins, prob, tags|
         break if outcomes.size >= @max_outcomes
         processed += 1
         # Probe reuse: the pins reproduce the probe's own roll values.
-        if pins.all? { |k, v| probe_log[k][0] == v }
-          outcomes.push(Outcome.new(state: probe_state, prob: prob, tags: [:probe] + tags, pins: pins))
+        if pin_landed?(@probe_log, pins)
+          outcomes.push(Outcome.new(state: @probe_state, prob: prob, tags: [:probe] + tags, pins: pins))
           next
         end
         child, _dec, rng = run_with(pins)
-        if pins.all? { |k, _v| rng.log[k] && rng.log[k][1] == probe_log[k][1] }
+        if pin_landed?(rng.log, pins, @probe_log)
           outcomes.push(Outcome.new(state: child, prob: prob, tags: tags, pins: pins))
         else
-          fold(outcomes, prob, probe_state)
+          count_unbranched(:pin_not_landed)
+          fold(outcomes, prob, @probe_state, pins)
         end
       end
 
-      # Cap: fold the mass of branches that never ran.
-      if processed < branches.size
-        folded = branches[processed..-1].sum { |_p, prob, _t| prob }
-        fold(outcomes, folded, probe_state) if folded > 0
+      # Cap: fold the mass of the branches that never ran.
+      if processed < ordered.length
+        folded = ordered[processed..-1].sum { |_p, prob, _t| prob }
+        if folded > 0
+          count_unbranched(:capped)
+          fold(outcomes, folded, @probe_state)
+        end
       end
 
       total = outcomes.sum(&:prob)
@@ -143,7 +178,16 @@ module CoachEngine2
       outcomes
     rescue StandardError => e
       warn_chance(e)
-      [Outcome.new(state: (probe_state || run_with({})[0]), prob: 1.0, tags: [:fallback], pins: {})]
+      count_unbranched(:enumerator_error)
+      state = @probe_state
+      if state.nil?
+        state = begin
+          run_with({})[0]
+        rescue StandardError
+          nil
+        end
+      end
+      [Outcome.new(state: state, prob: 1.0, tags: [:fallback], pins: {})]
     end
 
     private
@@ -154,8 +198,10 @@ module CoachEngine2
 
     def run_with(pins)
       @metrics.rounds_run += 1 if @metrics
-      TurnDriver.execute(@state, ours: @ours, foes: @foes, replacements: @replacements,
-                         rng: DeterministicRNG.new(policy: :median, pinned: pins))
+      rng = DeterministicRNG.new(policy: :median, pinned: pins)
+      child, decision, _rng = TurnDriver.execute(@state, ours: @ours, foes: @foes,
+                                                 replacements: @replacements, rng: rng)
+      [child, decision, rng]
     end
 
     def warn_chance(e)
@@ -164,50 +210,94 @@ module CoachEngine2
       (e.backtrace || [])[0, 8].each { |l| $stderr.puts "  #{l}" }
     end
 
-    # Folds probability into the largest outcome (or the probe if none).
-    def fold(outcomes, prob, probe_state, pins)
-      if outcomes.empty?
-        outcomes.push(Outcome.new(state: probe_state, prob: prob, tags: [:folded], pins: {}))
-      else
-        outcomes.max_by(&:prob).prob += prob
-      end
+    # Every approximation this enumerator makes is counted in the metrics it
+    # was given — nothing degrades silently.
+    def count_unbranched(_reason)
       @metrics.unbranched += 1 if @metrics
     end
 
-    # Accuracy event: measure thr, verify identification by exact state
-    # equality (hit-side pin must reproduce the probe when the probe hit).
-    def build_acc_event(acc_idx, probe_log, probe_state)
+    # Folds probability mass that could not be branched (a cap truncation, a
+    # pin that did not land) into ONE extra outcome carrying the probe's state
+    # — the median-band representative, i.e. the least biased state we have.
+    # Dumping the mass into the largest outcome instead distorts the
+    # distribution it is supposed to approximate (a truncated :fine
+    # enumeration used to inflate the miss branch to ~0.7). Every fold is
+    # counted in the metrics by the caller.
+    def fold(outcomes, prob, probe_state, pins = {})
+      existing = outcomes.find { |o| o.tags.include?(:folded) }
+      if existing
+        existing.prob += prob
+      else
+        outcomes.push(Outcome.new(state: probe_state, prob: prob, tags: [:folded], pins: pins))
+      end
+    end
+
+    # A branch is usable only if every pinned roll really LANDED on the roll it
+    # was meant for: same index, same max as in the probe, and the value we
+    # asked for (the RNG clamps out-of-range pins, and a shifted roll sequence
+    # would put the pin on somebody else's draw).
+    def pin_landed?(log, pins, probe_log = nil)
+      pins.all? do |k, v|
+        entry = log[k]
+        next false unless entry
+        next false if probe_log && (!probe_log[k] || entry[1] != probe_log[k][1])
+        entry[0] == v
+      end
+    end
+
+    # True when this battle really routes pbRandom through the twin instrument
+    # (an empty roll log then means "no roll was drawn", not "not measured").
+    def instrumented?(battle, rng)
+      return false unless battle.respond_to?(:coach_rng) && battle.coach_rng.equal?(rng)
+      owner = begin
+        battle.method(:pbRandom).owner
+      rescue StandardError, NameError
+        nil
+      end
+      return true if owner == TwinBehavior || owner == TwinBattle
+      adapter = battle.respond_to?(:anil_rework_rng) ? battle.anil_rework_rng : nil
+      adapter.is_a?(TwinBattle::CoachRNGAdapter)
+    end
+
+    # Accuracy event: measure thr for the move that really owns the roll, then
+    # PROVE the identification differentially.
+    def build_acc_event(acc_idx)
       return nil unless acc_idx
       thr = measure_accuracy_threshold
-      return nil unless thr
-      max = probe_log[acc_idx][1]
+      unless thr
+        count_unbranched(:acc_unmeasured)
+        return nil
+      end
+      max = @probe_log[acc_idx][1]
       return nil if thr <= 0 || thr >= max   # one-sided: no branch
       acc = { idx: acc_idx, thr: thr, max: max }
-      # Identification verification: if the probe hit, pinning the acc roll
-      # to thr-1 (also a hit, rest median) must reproduce the probe exactly.
-      if probe_log[acc_idx][0] < thr
-        vstate, = run_with(acc[:idx] => thr - 1)
-        same = vstate &&
-               TurnDriver::StateSummary.of(vstate).hashable == TurnDriver::StateSummary.of(probe_state).hashable
-        return nil unless same
-      end
-      acc
+      return acc if identification_holds?(acc)
+      count_unbranched(:acc_misidentified)
+      nil
+    end
+
+    # Pinning the roll just below thr (a hit) and exactly at thr (a miss) must
+    # change the round, and EXACTLY ONE of the two may reproduce the probe. A
+    # threshold measured for the wrong move typically agrees with the probe on
+    # both sides (both rolls still hit), which is what this rejects.
+    def identification_holds?(acc)
+      low_same  = same_as_probe?(run_with(acc[:idx] => acc[:thr] - 1)[0])
+      high_same = same_as_probe?(run_with(acc[:idx] => acc[:thr])[0])
+      low_same != high_same
+    end
+
+    def same_as_probe?(state)
+      return false unless state && @probe_state
+      TurnDriver::StateSummary.of(state).hashable ==
+        TurnDriver::StateSummary.of(@probe_state).hashable
     end
 
     # thr of the round's FIRST accuracy-checking move: bisection on the
     # engine's own pbAccuracyCheck (standalone call, no round execution).
     def measure_accuracy_threshold
       clone = Marshal.load(Marshal.dump(@state))
-      order = execution_order(@state)
-      order.each do |idx|
-        choice = choice_for(idx)
-        next unless choice.is_a?(Array) && choice[0] == :UseMove
-        user = clone.battlers[idx]
-        next unless user && !user.fainted?
-        move = choice[1] == -1 ? clone.struggle : user.moves[choice[1]]
+      each_round_move(clone) do |user, move, target|
         next unless move.respond_to?(:pbAccuracyCheck)
-        target = clone.battlers[target_index(@state, idx, choice)]
-        next unless target
         rng = DeterministicRNG.new(policy: :median, pinned: { 0 => 0 })
         clone.coach_rng = rng
         begin
@@ -242,16 +332,8 @@ module CoachEngine2
     # roll request max IS the ratio (crit iff roll == 0). One call, exact.
     def measure_crit_ratio
       clone = Marshal.load(Marshal.dump(@state))
-      order = execution_order(@state)
-      order.each do |idx|
-        choice = choice_for(idx)
-        next unless choice.is_a?(Array) && choice[0] == :UseMove
-        user = clone.battlers[idx]
-        next unless user && !user.fainted?
-        move = choice[1] == -1 ? clone.struggle : user.moves[choice[1]]
+      each_round_move(clone) do |user, move, target|
         next unless move.respond_to?(:pbIsCritical?)
-        target = clone.battlers[target_index(@state, idx, choice)]
-        next unless target
         rng = DeterministicRNG.new(policy: :max, pinned: { 0 => 1 })
         clone.coach_rng = rng
         begin
@@ -265,14 +347,48 @@ module CoachEngine2
       nil
     end
 
+    # Yields [user, move, target] for every move the probed round executed, in
+    # that round's real order, bound to the given (pre-round) clone.
+    def each_round_move(clone)
+      (@order || fallback_order(clone)).each do |idx|
+        choice = choice_for(idx)
+        next unless choice.is_a?(Array) && choice[0] == :UseMove
+        user = clone.battlers[idx]
+        next unless user && !user.fainted?
+        move = choice[1] == -1 ? clone.struggle : user.moves[choice[1]]
+        next unless move
+        target = clone.battlers[target_index(clone, idx, choice)]
+        next unless target
+        yield user, move, target
+      end
+    end
+
     def choice_for(idx)
+      # What the probed round ACTUALLY executed: TurnDriver's plain-data record
+      # (coach_choices) is the only source that survives the round and the only
+      # one that exists at all when a side is driven by the game AI.
+      c = @probe_choices[idx] if @probe_choices.is_a?(Hash)
+      return c if c.is_a?(Array) && c[0] == :UseMove
       return @ours[idx] if @ours.is_a?(Hash) && @ours.key?(idx)
       return @foes[idx] if @foes.is_a?(Hash) && @foes.key?(idx)
       @state.choices[idx]
     end
 
+    def probe_choices(state)
+      return state.coach_choices if state.respond_to?(:coach_choices) &&
+                                    state.coach_choices.is_a?(Hash) &&
+                                    !state.coach_choices.empty?
+      begin
+        state.choices
+      rescue StandardError
+        nil
+      end
+    end
+
     # The engine's @priority entries are [battler, speed, subpri, ...]
     # (battler OBJECTS — see pbCalculatePriority); turn them into indices.
+    # Called on the POST-round probe state, so this is the order the round
+    # really used — not the previous round's leftover.
     def execution_order(state)
       pri = state.instance_variable_get(:@priority)
       if pri.is_a?(Array) && !pri.empty?
@@ -282,6 +398,10 @@ module CoachEngine2
         end.compact
         return idxs unless idxs.empty?
       end
+      fallback_order(state)
+    end
+
+    def fallback_order(state)
       state.battlers.each_index.select { |i| state.battlers[i] }
     end
 
