@@ -13,10 +13,29 @@ Agent/AI contributors: read **[AGENT_PROMPT.md](AGENT_PROMPT.md)** before modify
 - `AGENT_PROMPT.md` — engineering handoff and non-negotiable requirements.
 - `src/extracted_scripts/` — Ruby scripts extracted from the current `Scripts.rxdata`, preserving load order.
 - `data/` — game data needed to map moves/items/abilities/species.
-- `baseline/Scripts.rxdata` — supplied binary baseline/source of truth.
+- `baseline/Scripts.rxdata` — supplied binary baseline/source of truth (never modified).
+- `game/Scripts.rxdata` — **rebuilt data file with Coach Engine 2.0** (616 original sections byte-identical + one new final section). Drop-in replacement; rebuild with `python3 tools/build_engine2_rxdata.py`.
 - `SCRIPT_MANIFEST.tsv` — script index/name/file mapping.
-- `tests/` — regression harnesses for real Coach failures.
-- `docs/` — audit, architecture and benchmark notes.
+- `engine2/` — Engine 2.0 sources (twin battle, turn driver, action space, evaluator, search, in-game integration).
+- `tests/headless/` — regression harness running the REAL engine + PBS data headless (see AUDIT.md §6 for results).
+- `tools/` — `rxdata.py` (Marshal reader/writer), `build_engine2_rxdata.py` (verified build), `rubyrun.py` (wasm runner).
+- `AUDIT.md` / `BENCHMARKS.md` / `CHANGELOG.md` — verification record, measured numbers, and change log.
+
+## Verifying the build
+
+```
+# rebuild + verify the rxdata (byte-identity of originals, new section last)
+python3 tools/build_engine2_rxdata.py
+
+# run the full regression suite (needs the wasm ruby toolchain; see AUDIT.md)
+python3 tools/rubyrun.py package/dist/ruby+stdlib.wasm file tests/headless/boot.rb tests/headless/run_engine2.rb
+```
+
+Current status: T1 10/10, T2 (the six mandatory scenarios) 17/17, T3 8/8,
+T4 8/8, shipped-rxdata smoke PASS. Scope and known limitations are listed in
+AUDIT.md §4/§7 — most importantly: chance nodes are currently collapsed by
+a median roll policy (values are estimates, not exact probabilities), and
+native in-game performance has not been measured in this environment.
 
 **Important:** the supplied baseline contains Coach code through **v27**. Do not assume a conversational v28 exists unless it is present in the repository.
 
