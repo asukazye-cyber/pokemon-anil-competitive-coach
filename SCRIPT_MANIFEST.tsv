@@ -1,0 +1,617 @@
+index	id	name	file	bytes
+0	20260829	MOD: 0000a_Recuperacao_Boot	000_MOD_ 0000a_Recuperacao_Boot.rb	9151
+1	20260714	MOD: 0000_Disable_Debug_Logs	001_MOD_ 0000_Disable_Debug_Logs.rb	4173
+2	448999	0000___________________	002_0000___________________.rb	0
+3	116765	0001____Settings___	003_0001____Settings___.rb	0
+4	467504	0002_Settings	004_0002_Settings.rb	31412
+5	585269	0003_BattleSettings	005_0003_BattleSettings.rb	8419
+6	291854	0004_Settings_Extra_Base	006_0004_Settings_Extra_Base.rb	11626
+7	642785	0005_Permalocke	007_0005_Permalocke.rb	470
+8	25335	0006_Switches_y_variables	008_0006_Switches_y_variables.rb	273
+9	415046	0007___________________	009_0007___________________.rb	0
+10	314207	0008____Technical___	010_0008____Technical___.rb	0
+11	911234	0009_MKXP_Compatibility	011_0009_MKXP_Compatibility.rb	2904
+12	885484	0010_RubyUtilities	012_0010_RubyUtilities.rb	12723
+13	702858	0011_Intl_Messages	013_0011_Intl_Messages.rb	61609
+14	954050	0012_Input	014_0012_Input.rb	26295
+15	643594	0013_PluginManager	015_0013_PluginManager.rb	33848
+16	241267	0014_RPG_Sprite	016_0014_RPG_Sprite.rb	10949
+17	251118	0015___________________	017_0015___________________.rb	0
+18	958917	0016____Debugging___	018_0016____Debugging___.rb	0
+19	420553	0017_PBDebug	019_0017_PBDebug.rb	1935
+20	64839	0018_DebugConsole	020_0018_DebugConsole.rb	7100
+21	286602	0019_Errors	021_0019_Errors.rb	3146
+22	459674	0020_Validation	022_0020_Validation.rb	1598
+23	664781	0021_Deprecation	023_0021_Deprecation.rb	2265
+24	617320	0022___________________	024_0022___________________.rb	0
+25	137830	0023____Files___	025_0023____Files___.rb	0
+26	986904	0024_FileTests	026_0024_FileTests.rb	15277
+27	488503	0025_FileMixins	027_0025_FileMixins.rb	2410
+28	941203	0026_HTTP_Utilities	028_0026_HTTP_Utilities.rb	2432
+29	467352	0027___________________	029_0027___________________.rb	0
+30	280120	0028____Save_data___	030_0028____Save_data___.rb	0
+31	652761	0029_SaveData	031_0029_SaveData.rb	3188
+32	869885	0030_SaveData_Value	032_0030_SaveData_Value.rb	10717
+33	681981	0031_SaveData_Conversion	033_0031_SaveData_Conversion.rb	8185
+34	714018	0032_Game_SaveValues	034_0032_Game_SaveValues.rb	3564
+35	936077	0033_Game_SaveConversions	035_0033_Game_SaveConversions.rb	15657
+36	550092	0034___________________	036_0034___________________.rb	0
+37	412808	0035____Game_processing___	037_0035____Game_processing___.rb	0
+38	399622	0036_StartGame	038_0036_StartGame.rb	5295
+39	95552	0037_Scene_Map	039_0037_Scene_Map.rb	10232
+40	506730	0038_Interpreter	040_0038_Interpreter.rb	13768
+41	511468	0039_Interpreter_Commands	041_0039_Interpreter_Commands.rb	46049
+42	731475	0040_Event_Handlers	042_0040_Event_Handlers.rb	9034
+43	723996	0041_Event_HandlerCollections	043_0041_Event_HandlerCollections.rb	6993
+44	475416	0042___________________	044_0042___________________.rb	0
+45	875409	0043____Game_classes___	045_0043____Game_classes___.rb	0
+46	249548	0044_Game_Screen	046_0044_Game_Screen.rb	4932
+47	221968	0045_Game_System	047_0045_Game_System.rb	8126
+48	641540	0046_Game_Picture	048_0046_Game_Picture.rb	5717
+49	777796	0047_Game_Map	049_0047_Game_Map.rb	23097
+50	867551	0048_Game_MapFactory	050_0048_Game_MapFactory.rb	16516
+51	993851	0049_Game_Character	051_0049_Game_Character.rb	34703
+52	937354	0050_Game_Event	052_0050_Game_Event.rb	8300
+53	456938	0051_Game_Player	053_0051_Game_Player.rb	25069
+54	738694	0052_Game_CommonEvent	054_0052_Game_CommonEvent.rb	1575
+55	844821	0053_Game_Follower	055_0053_Game_Follower.rb	8691
+56	880958	0054_Game_FollowerFactory	056_0054_Game_FollowerFactory.rb	12853
+57	401800	0055_Game_Stats	057_0055_Game_Stats.rb	7950
+58	590179	0056___________________	058_0056___________________.rb	0
+59	465333	0057____Switches_and_Variables___	059_0057____Switches_and_Variables___.rb	0
+60	24600	0058_Game_Temp	060_0058_Game_Temp.rb	4585
+61	80619	0059_Game_Switches	061_0059_Game_Switches.rb	823
+62	877198	0060_Game_Variables	062_0060_Game_Variables.rb	854
+63	954611	0061_Game_SelfSwitches	063_0061_Game_SelfSwitches.rb	728
+64	873340	0062___________________	064_0062___________________.rb	0
+65	901371	0063____Sprites___	065_0063____Sprites___.rb	0
+66	418635	0064_Sprite_Picture	066_0064_Sprite_Picture.rb	1600
+67	306829	0065_Sprite_Timer	067_0065_Sprite_Timer.rb	1128
+68	26591	0066_Sprite_Character	068_0066_Sprite_Character.rb	21084
+69	29984	0067_Sprite_Reflection	069_0067_Sprite_Reflection.rb	3035
+70	940090	0068_Sprite_SurfBase	070_0068_Sprite_SurfBase.rb	3347
+71	368491	0069_Spriteset_Global	071_0069_Spriteset_Global.rb	1853
+72	658363	0070_Spriteset_Map	072_0070_Spriteset_Map.rb	4988
+73	319540	0071_Sprite_AnimationSprite	073_0071_Sprite_AnimationSprite.rb	2587
+74	126437	0072_Sprite_DynamicShadows	074_0072_Sprite_DynamicShadows.rb	8899
+75	742679	0073_PictureEx	075_0073_PictureEx.rb	18648
+76	478509	0074_ScreenPosHelper	076_0074_ScreenPosHelper.rb	846
+77	162581	0075___________________	077_0075___________________.rb	0
+78	754938	0076____Map_renderer___	078_0076____Map_renderer___.rb	0
+79	956515	0077_TilemapRenderer	079_0077_TilemapRenderer.rb	25810
+80	877622	0078_TilesetWrapper	080_0078_TilesetWrapper.rb	4304
+81	130807	0079_AutotileExpander	081_0079_AutotileExpander.rb	3625
+82	681552	0080_TileDrawingHelper	082_0080_TileDrawingHelper.rb	8728
+83	335239	0081___________________	083_0081___________________.rb	0
+84	817877	0082____Objects_and_windows___	084_0082____Objects_and_windows___.rb	0
+85	16220	0083_RPG_Cache	085_0083_RPG_Cache.rb	4733
+86	873433	0084_MessageConfig	086_0084_MessageConfig.rb	30521
+87	764302	0085_Window	087_0085_Window.rb	18404
+88	735331	0086_SpriteWindow	088_0086_SpriteWindow.rb	29115
+89	895303	0087_SpriteWindow_text	089_0087_SpriteWindow_text.rb	48827
+90	520230	0088_SpriteWindow_pictures	090_0088_SpriteWindow_pictures.rb	3258
+91	401455	0089_BitmapSprite	091_0089_BitmapSprite.rb	13213
+92	609198	0090_AnimatedBitmap	092_0090_AnimatedBitmap.rb	6610
+93	965684	0091_Planes	093_0091_Planes.rb	1910
+94	669770	0092_DrawText	094_0092_DrawText.rb	41220
+95	96559	0093_Messages	095_0093_Messages.rb	29501
+96	426793	0094_TextEntry	096_0094_TextEntry.rb	19520
+97	619644	0095___________________	097_0095___________________.rb	0
+98	232732	0096____Audio___	098_0096____Audio___.rb	0
+99	54270	0097_Audio	099_0097_Audio.rb	4587
+100	293920	0098_Audio_Play	100_0098_Audio_Play.rb	8945
+101	236050	0099___________________	101_0099___________________.rb	0
+102	648050	0100____Scenes___	102_0100____Scenes___.rb	0
+103	214291	0101_Transitions	103_0101_Transitions.rb	79355
+104	822238	0102_EventScene	104_0102_EventScene.rb	5209
+105	172457	0103___________________	105_0103___________________.rb	0
+106	556352	0104____Data___	106_0104____Data___.rb	0
+107	267916	0105_GameData	107_0105_GameData.rb	9296
+108	109397	0106___________________	108_0106___________________.rb	0
+109	386912	0107____Hardcoded_data___	109_0107____Hardcoded_data___.rb	0
+110	642366	0108_GrowthRate	110_0108_GrowthRate.rb	10542
+111	911384	0109_GenderRatio	111_0109_GenderRatio.rb	2212
+112	762959	0110_EggGroup	112_0110_EggGroup.rb	1849
+113	848112	0111_BodyShape	113_0111_BodyShape.rb	2840
+114	192535	0112_BodyColor	114_0112_BodyColor.rb	1515
+115	153084	0113_Habitat	115_0113_Habitat.rb	1408
+116	954832	0114_Evolution	116_0114_Evolution.rb	22585
+117	498497	0115_Stat	117_0115_Stat.rb	3194
+118	299626	0116_Nature	118_0116_Nature.rb	4346
+119	680234	0117_Status	119_0117_Status.rb	2350
+120	123890	0118_TerrainTag	120_0118_TerrainTag.rb	6430
+121	119457	0119_Weather	121_0119_Weather.rb	7389
+122	434544	0120_EncounterType	122_0120_EncounterType.rb	3959
+123	290828	0121_Environment	123_0121_Environment.rb	2699
+124	838484	0122_BattleWeather	124_0122_BattleWeather.rb	1786
+125	226446	0123_BattleTerrain	125_0123_BattleTerrain.rb	1346
+126	431530	0124_Target	126_0124_Target.rb	5220
+127	525215	0125___________________	127_0125___________________.rb	0
+128	99750	0126____PBS_data___	128_0126____PBS_data___.rb	0
+129	383597	0127_MiscPBSData	129_0127_MiscPBSData.rb	2448
+130	589633	0128_TownMap	130_0128_TownMap.rb	1203
+131	94059	0129_Type	131_0129_Type.rb	4657
+132	346278	0130_Ability	132_0130_Ability.rb	1332
+133	220342	0131_Move	133_0131_Move.rb	19142
+134	918934	0132_Item	134_0132_Item.rb	14178
+135	96018	0133_BerryPlant	135_0133_BerryPlant.rb	1255
+136	761291	0134_Species	136_0134_Species.rb	22448
+137	258271	0135_Species_files	137_0135_Species_files.rb	10742
+138	763740	0136_SpeciesMetrics	138_0136_SpeciesMetrics.rb	3771
+139	470048	0137_ShadowPokemon	139_0137_ShadowPokemon.rb	2325
+140	42096	0138_Ribbon	140_0138_Ribbon.rb	1517
+141	270123	0139_Encounter	141_0139_Encounter.rb	2340
+142	541472	0140_TrainerType	142_0140_TrainerType.rb	5765
+143	711617	0141_Trainer	143_0141_Trainer.rb	9175
+144	585355	0142_Metadata	144_0142_Metadata.rb	4164
+145	464818	0143_PlayerMetadata	145_0143_PlayerMetadata.rb	4121
+146	245356	0144_MapMetadata	146_0144_MapMetadata.rb	8444
+147	62585	0145_DungeonTileset	147_0145_DungeonTileset.rb	10137
+148	282233	0146_DungeonParameters	148_0146_DungeonParameters.rb	7089
+149	290453	0147_PhoneMessage	149_0147_PhoneMessage.rb	3720
+150	212005	0148___________________	150_0148___________________.rb	0
+151	716522	0149____Battle___	151_0149____Battle___.rb	0
+152	28439	0150_Battle	152_0150_Battle.rb	46253
+153	744270	0151_Battle_StartAndEnd	153_0151_Battle_StartAndEnd.rb	24737
+154	209830	0152_Battle_ExpAndMoveLearning	154_0152_Battle_ExpAndMoveLearning.rb	12297
+155	899096	0153_Battle_ActionAttacksPriority	155_0153_Battle_ActionAttacksPriority.rb	12327
+156	343725	0154_Battle_ActionSwitching	156_0154_Battle_ActionSwitching.rb	21392
+157	148713	0155_Battle_ActionUseItem	157_0155_Battle_ActionUseItem.rb	5982
+158	590456	0156_Battle_ActionRunning	158_0156_Battle_ActionRunning.rb	5731
+159	277114	0157_Battle_ActionOther	159_0157_Battle_ActionOther.rb	7942
+160	819212	0158_Battle_CommandPhase	160_0158_Battle_CommandPhase.rb	88029
+161	198003	0159_Battle_AttackPhase	161_0159_Battle_AttackPhase.rb	7530
+162	920667	0160_Battle_EndOfRoundPhase	162_0160_Battle_EndOfRoundPhase.rb	40579
+163	488943	0161___________________	163_0161___________________.rb	0
+164	145732	0162____Battler___	164_0162____Battler___.rb	0
+165	517874	0163_Battle_Battler	165_0163_Battle_Battler.rb	29370
+166	242594	0164_Battler_Initialize	166_0164_Battler_Initialize.rb	15189
+167	489308	0165_Battler_ChangeSelf	167_0165_Battler_ChangeSelf.rb	15024
+168	72904	0166_Battler_Statuses	168_0166_Battler_Statuses.rb	25124
+169	584185	0167_Battler_StatStages	169_0167_Battler_StatStages.rb	23648
+170	310449	0168_Battler_AbilityAndItem	170_0168_Battler_AbilityAndItem.rb	20591
+171	269925	0169_Battler_UseMove	171_0169_Battler_UseMove.rb	34868
+172	335190	0170_Battler_UseMoveTargeting	172_0170_Battler_UseMoveTargeting.rb	9027
+173	245002	0171_Battler_UseMoveSuccessChecks	173_0171_Battler_UseMoveSuccessChecks.rb	29706
+174	410903	0172_Battler_UseMoveTriggerEffects	174_0172_Battler_UseMoveTriggerEffects.rb	11560
+175	889219	0173___________________	175_0173___________________.rb	0
+176	518171	0174____Move___	176_0174____Move___.rb	0
+177	540004	0175_Battle_Move	177_0175_Battle_Move.rb	9551
+178	431967	0176_Move_Usage	178_0176_Move_Usage.rb	18164
+179	718093	0177_Move_UsageCalculations	179_0177_Move_UsageCalculations.rb	23283
+180	852170	0178_Move_BaseEffects	180_0178_Move_BaseEffects.rb	23575
+181	613286	0179_MoveEffects_Misc	181_0179_MoveEffects_Misc.rb	33382
+182	225144	0180_MoveEffects_BattlerStats	182_0180_MoveEffects_BattlerStats.rb	94638
+183	629958	0181_MoveEffects_BattlerOther	183_0181_MoveEffects_BattlerOther.rb	67566
+184	333191	0182_MoveEffects_MoveAttributes	184_0182_MoveEffects_MoveAttributes.rb	73889
+185	196936	0183_MoveEffects_MultiHit	185_0183_MoveEffects_MultiHit.rb	28408
+186	282999	0184_MoveEffects_Healing	186_0184_MoveEffects_Healing.rb	28118
+187	749134	0185_MoveEffects_Items	187_0185_MoveEffects_Items.rb	19665
+188	811827	0186_MoveEffects_ChangeMoveEffect	188_0186_MoveEffects_ChangeMoveEffect.rb	60554
+189	755607	0187_MoveEffects_SwitchingActing	189_0187_MoveEffects_SwitchingActing.rb	45251
+190	429635	0188___________________	190_0188___________________.rb	0
+191	123886	0189____Scene___	191_0189____Scene___.rb	0
+192	852575	0190_Battle_Scene	192_0190_Battle_Scene.rb	14953
+193	215942	0191_Scene_Initialize	193_0191_Scene_Initialize.rb	7798
+194	842841	0192_Scene_ChooseCommands	194_0192_Scene_ChooseCommands.rb	19516
+195	880326	0193_Scene_PlayAnimations	195_0193_Scene_PlayAnimations.rb	24247
+196	277384	0194_Battle_Scene_Menus	196_0194_Battle_Scene_Menus.rb	18965
+197	303231	0195_Battle_Scene_Objects	197_0195_Battle_Scene_Objects.rb	24655
+198	397084	0196_Battle_Scene_BaseAnimation	198_0196_Battle_Scene_BaseAnimation.rb	46549
+199	735151	0197_Battle_Scene_Animations	199_0197_Battle_Scene_Animations.rb	34973
+200	939415	0198_Battle_DebugScene	200_0198_Battle_DebugScene.rb	3564
+201	575571	0199_Battle_Scene_Arceus_Transform	201_0199_Battle_Scene_Arceus_Transform.rb	8019
+202	983170	0200___________________	202_0200___________________.rb	0
+203	762951	0201____AI___	203_0201____AI___.rb	0
+204	880429	0202_Battle_AI	204_0202_Battle_AI.rb	7315
+205	618861	0203_AI_Switch	205_0203_AI_Switch.rb	32660
+206	116684	0204_AI_UseItem	206_0204_AI_UseItem.rb	9575
+207	699105	0205_AI_MegaEvolve	207_0205_AI_MegaEvolve.rb	471
+208	26928	0206_AI_ChooseMove	208_0206_AI_ChooseMove.rb	19464
+209	786060	0207_AI_ChooseMove_GenericEffects	209_0207_AI_ChooseMove_GenericEffects.rb	35544
+210	982483	0208_AI_ChooseMove_OtherScores	210_0208_AI_ChooseMove_OtherScores.rb	24943
+211	506353	0209_AI_Utilities	211_0209_AI_Utilities.rb	38897
+212	883753	0210_AITrainer	212_0210_AITrainer.rb	3085
+213	896670	0211_AIBattler	213_0211_AIBattler.rb	24566
+214	829770	0212_AIMove	214_0212_AIMove.rb	26273
+215	452809	0213___________________	215_0213___________________.rb	0
+216	346943	0214____AI_MoveEffects___	216_0214____AI_MoveEffects___.rb	0
+217	321617	0215_AI_MoveEffects_Misc	217_0215_AI_MoveEffects_Misc.rb	42369
+218	590418	0216_AI_MoveEffects_BattlerStats	218_0216_AI_MoveEffects_BattlerStats.rb	94634
+219	179374	0217_AI_MoveEffects_BattlerOther	219_0217_AI_MoveEffects_BattlerOther.rb	109308
+220	532184	0218_AI_MoveEffects_MoveAttributes	220_0218_AI_MoveEffects_MoveAttributes.rb	68379
+221	435520	0219_AI_MoveEffects_MultiHit	221_0219_AI_MoveEffects_MultiHit.rb	26245
+222	638580	0220_AI_MoveEffects_Healing	222_0220_AI_MoveEffects_Healing.rb	31509
+223	527907	0221_AI_MoveEffects_Items	223_0221_AI_MoveEffects_Items.rb	17658
+224	251487	0222_AI_MoveEffects_ChangeMoveEffect	224_0222_AI_MoveEffects_ChangeMoveEffect.rb	29581
+225	171544	0223_AI_MoveEffects_SwitchingActing	225_0223_AI_MoveEffects_SwitchingActing.rb	41969
+226	264221	0224___________________	226_0224___________________.rb	0
+227	98682	0225____Other_battle_code___	227_0225____Other_battle_code___.rb	0
+228	724026	0226_PBEffects	228_0226_PBEffects.rb	7120
+229	922020	0227_Battle_ActiveField	229_0227_Battle_ActiveField.rb	3425
+230	792458	0228_Battle_DamageState	230_0228_Battle_DamageState.rb	2427
+231	765129	0229_Battle_Peers	231_0229_Battle_Peers.rb	2735
+232	71833	0230_Battle_CatchAndStoreMixin	232_0230_Battle_CatchAndStoreMixin.rb	18073
+233	811586	0231_Battle_Clauses	233_0231_Battle_Clauses.rb	10852
+234	44753	0232_BattleAnimationPlayer	234_0232_BattleAnimationPlayer.rb	30579
+235	799760	0233_Battle_AbilityEffects	235_0233_Battle_AbilityEffects.rb	167755
+236	336161	0234_Battle_ItemEffects	236_0234_Battle_ItemEffects.rb	80055
+237	155118	0235_Battle_PokeBallEffects	237_0235_Battle_PokeBallEffects.rb	7045
+238	813482	0236___________________	238_0236___________________.rb	0
+239	190178	0237____Other_battle_types___	239_0237____Other_battle_types___.rb	0
+240	298240	0238_SafariBattle	240_0238_SafariBattle.rb	18927
+241	405213	0239_BugContestBattle	241_0239_BugContestBattle.rb	2970
+242	504198	0240_BattlePalaceBattle	242_0240_BattlePalaceBattle.rb	8155
+243	595698	0241_BattleArenaBattle	243_0241_BattleArenaBattle.rb	12636
+244	208449	0242_RecordedBattle	244_0242_RecordedBattle.rb	8628
+245	842337	0243___________________	245_0243___________________.rb	0
+246	702834	0244____Overworld___	246_0244____Overworld___.rb	0
+247	777125	0245_Overworld	247_0245_Overworld.rb	29821
+248	437540	0246_Overworld_Metadata	248_0246_Overworld_Metadata.rb	6194
+249	739510	0247_Overworld_Time	249_0247_Overworld_Time.rb	10119
+250	147703	0248_Overworld_FieldMoves	250_0248_Overworld_FieldMoves.rb	35366
+251	240117	0249_Overworld_Fishing	251_0249_Overworld_Fishing.rb	3650
+252	143081	0250_Overworld_BerryPlants	252_0250_Overworld_BerryPlants.rb	16555
+253	701037	0251_Overworld_DayCare	253_0251_Overworld_DayCare.rb	21816
+254	640129	0252_Overworld_RandomDungeons	254_0252_Overworld_RandomDungeons.rb	46961
+255	965189	0253___________________	255_0253___________________.rb	0
+256	878030	0254____Overworld_visuals___	256_0254____Overworld_visuals___.rb	0
+257	383108	0255_Overworld_Weather	257_0255_Overworld_Weather.rb	22653
+258	486378	0256_Overworld_Overlays	258_0256_Overworld_Overlays.rb	7643
+259	723122	0257_Overworld_MapTransitionAnims	259_0257_Overworld_MapTransitionAnims.rb	4918
+260	36938	0258___________________	260_0258___________________.rb	0
+261	336625	0259____Battle_triggering___	261_0259____Battle_triggering___.rb	0
+262	362603	0260_Overworld_BattleStarting	262_0260_Overworld_BattleStarting.rb	35774
+263	553588	0261_Overworld_BattleIntroAnim	263_0261_Overworld_BattleIntroAnim.rb	23844
+264	727470	0262_Overworld_WildEncounters	264_0262_Overworld_WildEncounters.rb	18961
+265	258238	0263_Overworld_EncounterModifiers	265_0263_Overworld_EncounterModifiers.rb	1903
+266	331819	0264_Overworld_RoamingPokemon	266_0264_Overworld_RoamingPokemon.rb	9873
+267	214294	0265___________________	267_0265___________________.rb	0
+268	718999	0266____Items___	268_0266____Items___.rb	0
+269	487181	0267_Item_Utilities	269_0267_Item_Utilities.rb	34925
+270	537334	0268_Item_Effects	270_0268_Item_Effects.rb	59760
+271	620686	0269_Item_BattleEffects	271_0269_Item_BattleEffects.rb	29111
+272	605074	0270_Item_Phone	272_0270_Item_Phone.rb	26177
+273	62694	0271_Item_PokeRadar	273_0271_Item_PokeRadar.rb	10477
+274	853202	0272_Item_Mail	274_0272_Item_Mail.rb	5144
+275	44869	0273_Item_Sprites	275_0273_Item_Sprites.rb	4588
+276	689669	0274_PokemonBag	276_0274_PokemonBag.rb	13567
+277	738821	0275___________________	277_0275___________________.rb	0
+278	926863	0276____Pokemon___	278_0276____Pokemon___.rb	0
+279	57998	0277_Pokemon	279_0277_Pokemon.rb	55965
+280	833490	0278_Pokemon_MegaEvolution	280_0278_Pokemon_MegaEvolution.rb	2630
+281	377096	0279_Pokemon_ShadowPokemon	281_0279_Pokemon_ShadowPokemon.rb	7173
+282	449282	0280_Pokemon_Move	282_0280_Pokemon_Move.rb	3311
+283	20718	0281_Pokemon_Owner	283_0281_Pokemon_Owner.rb	2596
+284	451796	0282___________________	284_0282___________________.rb	0
+285	333624	0283____Pokemon-related___	285_0283____Pokemon-related___.rb	0
+286	758094	0284_FormHandlers	286_0284_FormHandlers.rb	29226
+287	94369	0285_ShadowPokemon_Other	287_0285_ShadowPokemon_Other.rb	16426
+288	447873	0286_Pokemon_Sprites	288_0286_Pokemon_Sprites.rb	11139
+289	554131	0287_PokemonStorage	289_0287_PokemonStorage.rb	10833
+290	626067	0288___________________	290_0288___________________.rb	0
+291	424284	0289____Trainers_and_player___	291_0289____Trainers_and_player___.rb	0
+292	773490	0290_Trainer_Class	292_0290_Trainer_Class.rb	13800
+293	324208	0291_Trainer_LoadAndNew	293_0291_Trainer_LoadAndNew.rb	4624
+294	338996	0292_Trainer_Sprites	294_0292_Trainer_Sprites.rb	2378
+295	353466	0293_Player	295_0293_Player.rb	4755
+296	783279	0294_Player_Pokedex	296_0294_Player_Pokedex.rb	14189
+297	86167	0295___________________	297_0295___________________.rb	0
+298	903446	0296____UI___	298_0296____UI___.rb	0
+299	320156	0297_UI_base	299_0297_UI_base.rb	29153
+300	252330	0298_UI_PauseMenu	300_0298_UI_PauseMenu.rb	23881
+301	421321	0299_UI_Pokedex_Menu	301_0299_UI_Pokedex_Menu.rb	4786
+302	867	0300_UI_Pokedex_Main	302_0300_UI_Pokedex_Main.rb	50667
+303	334028	0301_UI_Pokedex_Entry	303_0301_UI_Pokedex_Entry.rb	25578
+304	366837	0302_UI_Party	304_0302_UI_Party.rb	55685
+305	72769	0303_UI_Summary	305_0303_UI_Summary.rb	54178
+306	432731	0304_UI_Bag	306_0304_UI_Bag.rb	26604
+307	377932	0305_UI_Pokegear	307_0305_UI_Pokegear.rb	6207
+308	948475	0306_UI_RegionMap	308_0306_UI_RegionMap.rb	12090
+309	837522	0307_UI_Phone	309_0307_UI_Phone.rb	10111
+310	66635	0308_UI_Jukebox	310_0308_UI_Jukebox.rb	4809
+311	563139	0309_UI_TrainerCard	311_0309_UI_TrainerCard.rb	4285
+312	60888	0310_UI_Load	312_0310_UI_Load.rb	15990
+313	339533	0311_UI_Save	313_0311_UI_Save.rb	5082
+314	715479	0312_UI_Options	314_0312_UI_Options.rb	30169
+315	712177	0313_UI_ReadyMenu	315_0313_UI_ReadyMenu.rb	10332
+316	388266	0314_UI_PokemonStorage	316_0314_UI_PokemonStorage.rb	70479
+317	255951	0315_UI_ItemStorage	317_0315_UI_ItemStorage.rb	15530
+318	480159	0316_UI_PC	318_0316_UI_PC.rb	8141
+319	825876	0317_UI_PokeMart	319_0317_UI_PokeMart.rb	25270
+320	550474	0318_UI_BattlePointShop	320_0318_UI_BattlePointShop.rb	17567
+321	917033	0319_UI_MoveRelearner	321_0319_UI_MoveRelearner.rb	7902
+322	590229	0320_UI_PurifyChamber	322_0320_UI_PurifyChamber.rb	39279
+323	856516	0321_UI_MysteryGift	323_0321_UI_MysteryGift.rb	30930
+324	315992	0322_UI_TextEntry	324_0322_UI_TextEntry.rb	28056
+325	812976	0323___________________	325_0323___________________.rb	0
+326	373648	0324____Non-interactive_UI___	326_0324____Non-interactive_UI___.rb	0
+327	471599	0325_UI_SplashesAndTitleScreen	327_0325_UI_SplashesAndTitleScreen.rb	8357
+328	240540	0326_UI_Controls	328_0326_UI_Controls.rb	2700
+329	871207	0327_UI_EggHatching	329_0327_UI_EggHatching.rb	10334
+330	773222	0328_UI_Evolution	330_0328_UI_Evolution.rb	9995
+331	288107	0329_UI_Trading	331_0329_UI_Trading.rb	10916
+332	883806	0330_UI_HallOfFame	332_0330_UI_HallOfFame.rb	19002
+333	387685	0331_UI_Credits	333_0331_UI_Credits.rb	9615
+334	675177	0332___________________	334_0332___________________.rb	0
+335	980437	0333____Minigames___	335_0333____Minigames___.rb	0
+336	63328	0334_Minigame_Duel	336_0334_Minigame_Duel.rb	15136
+337	955272	0335_Minigame_TripleTriad	337_0335_Minigame_TripleTriad.rb	45136
+338	184186	0336_Minigame_SlotMachine	338_0336_Minigame_SlotMachine.rb	15937
+339	903975	0337_Minigame_VoltorbFlip	339_0337_Minigame_VoltorbFlip.rb	22859
+340	479095	0338_Minigame_Lottery	340_0338_Minigame_Lottery.rb	1463
+341	869691	0339_Minigame_Mining	341_0339_Minigame_Mining.rb	26805
+342	251545	0340_Minigame_TilePuzzles	342_0340_Minigame_TilePuzzles.rb	22121
+343	483575	0341___________________	343_0341___________________.rb	0
+344	448751	0342____Alternate_battle_modes___	344_0342____Alternate_battle_modes___.rb	0
+345	511956	0343_SafariZone	345_0343_SafariZone.rb	6642
+346	226078	0344_BugContest	346_0344_BugContest.rb	13975
+347	862400	0345___________________	347_0345___________________.rb	0
+348	189707	0346____Battle_Frontier___	348_0346____Battle_Frontier___.rb	0
+349	692006	0347_Challenge_BattleChallenge	349_0347_Challenge_BattleChallenge.rb	12236
+350	425650	0348_Challenge_Data	350_0348_Challenge_Data.rb	7828
+351	87530	0349_Challenge_ChooseFoes	351_0349_Challenge_ChooseFoes.rb	7214
+352	749953	0350_Challenge_Battles	352_0350_Challenge_Battles.rb	5498
+353	691515	0351_UI_BattleSwap	353_0351_UI_BattleSwap.rb	8016
+354	827448	0352___________________	354_0352___________________.rb	0
+355	428434	0353____Battle_Frontier_rules___	355_0353____Battle_Frontier_rules___.rb	0
+356	412777	0354_Challenge_ChallengeRules	356_0354_Challenge_ChallengeRules.rb	11893
+357	437871	0355_Challenge_Rulesets	357_0355_Challenge_Rulesets.rb	9560
+358	131545	0356_Challenge_EntryRestrictions	358_0356_Challenge_EntryRestrictions.rb	11659
+359	996872	0357_Challenge_LevelAdjustment	359_0357_Challenge_LevelAdjustment.rb	6745
+360	576278	0358_Challenge_BattleRules	360_0358_Challenge_BattleRules.rb	3997
+361	723564	0359___________________	361_0359___________________.rb	0
+362	435445	0360____Battle_Frontier_generator___	362_0360____Battle_Frontier_generator___.rb	0
+363	119593	0361_ChallengeGenerator_Data	363_0361_ChallengeGenerator_Data.rb	10201
+364	482698	0362_ChallengeGenerator_Pokemon	364_0362_ChallengeGenerator_Pokemon.rb	13600
+365	205320	0363_ChallengeGenerator_Trainers	365_0363_ChallengeGenerator_Trainers.rb	8749
+366	25051	0364_ChallengeGenerator_BattleSim	366_0364_ChallengeGenerator_BattleSim.rb	12229
+367	156609	0365___________________	367_0365___________________.rb	0
+368	354828	0366____Utilities___	368_0366____Utilities___.rb	0
+369	193396	0367_Utilities	369_0367_Utilities.rb	19829
+370	936302	0368_Utilities_Pokemon	370_0368_Utilities_Pokemon.rb	14255
+371	667803	0369_Utilities_BattleAudio	371_0369_Utilities_BattleAudio.rb	5018
+372	34614	0370___________________	372_0370___________________.rb	0
+373	468898	0371____Debug___	373_0371____Debug___.rb	0
+374	902012	0372_Editor_Utilities	374_0372_Editor_Utilities.rb	12779
+375	71276	0373_Editor_DataTypes	375_0373_Editor_DataTypes.rb	55875
+376	413748	0374_Editor_Listers	376_0374_Editor_Listers.rb	17085
+377	528154	0375___________________	377_0375___________________.rb	0
+378	649974	0376____Editor_screens___	378_0376____Editor_screens___.rb	0
+379	475365	0377_EditorScreens	379_0377_EditorScreens.rb	51778
+380	531280	0378_EditorScreens_TerrainTags	380_0378_EditorScreens_TerrainTags.rb	10692
+381	333747	0379_EditorScreens_MapConnections	381_0379_EditorScreens_MapConnections.rb	17002
+382	575377	0380_EditorScreens_SpritePositioning	382_0380_EditorScreens_SpritePositioning.rb	14129
+383	460700	0381___________________	383_0381___________________.rb	0
+384	318189	0382____Animation_editor___	384_0382____Animation_editor___.rb	0
+385	774035	0383_AnimEditor_SceneElements	385_0383_AnimEditor_SceneElements.rb	32897
+386	338423	0384_AnimEditor_ControlsButtons	386_0384_AnimEditor_ControlsButtons.rb	27145
+387	668393	0385_AnimEditor_Interpolation	387_0385_AnimEditor_Interpolation.rb	13573
+388	426236	0386_AnimEditor_ExportImport	388_0386_AnimEditor_ExportImport.rb	5154
+389	382462	0387_AnimEditor_Functions	389_0387_AnimEditor_Functions.rb	48343
+390	28491	0388___________________	390_0388___________________.rb	0
+391	107110	0389____Debug_menus___	391_0389____Debug_menus___.rb	0
+392	571618	0390_Debug_Menus	392_0390_Debug_Menus.rb	13477
+393	555638	0391_Debug_MenuCommands	393_0391_Debug_MenuCommands.rb	61021
+394	547981	0392_Debug_MenuExtraCode	394_0392_Debug_MenuExtraCode.rb	30844
+395	760246	0393_Debug_BattleCommands	395_0393_Debug_BattleCommands.rb	19110
+396	851408	0394_Debug_BattlePkmnCommands	396_0394_Debug_BattlePkmnCommands.rb	32458
+397	364971	0395_Debug_BattleExtraCode	397_0395_Debug_BattleExtraCode.rb	29083
+398	872997	0396_Debug_PokemonCommands	398_0396_Debug_PokemonCommands.rb	41985
+399	278300	0397_Debug_FilenameUpdater	399_0397_Debug_FilenameUpdater.rb	3330
+400	694587	0398___________________	400_0398___________________.rb	0
+401	338850	0399____Compiler___	401_0399____Compiler___.rb	0
+402	566469	0400_Compiler	402_0400_Compiler.rb	39848
+403	836301	0401_Compiler_CompilePBS	403_0401_Compiler_CompilePBS.rb	56731
+404	179672	0402_Compiler_WritePBS	404_0402_Compiler_WritePBS.rb	31952
+405	950981	0403_Compiler_MapsAndEvents	405_0403_Compiler_MapsAndEvents.rb	79233
+406	339180	0404___________________	406_0404___________________.rb	0
+407	598916	0405____Scripts_de_la_base___	407_0405____Scripts_de_la_base___.rb	0
+408	475049	0406_Exit_Arrows	408_0406_Exit_Arrows.rb	1893
+409	518859	0407_Ocultar_pies_en_la_hierba	409_0407_Ocultar_pies_en_la_hierba.rb	1215
+410	209744	0408_Bag_with_interactuable_party	410_0408_Bag_with_interactuable_party.rb	98440
+411	864036	0409_BetterMoveRelearner	411_0409_BetterMoveRelearner.rb	14149
+412	610428	0410_BetterSummary	412_0410_BetterSummary.rb	17348
+413	805205	0411_Debug_Passability	413_0411_Debug_Passability.rb	12250
+414	39742	0412_Encounter_List_UI	414_0412_Encounter_List_UI.rb	11801
+415	179591	0413_ELNS_Fancy_Camera	415_0413_ELNS_Fancy_Camera.rb	11824
+416	272907	0414_ExpShare	416_0414_ExpShare.rb	10392
+417	952079	0415_Fondos_Terrenos	417_0415_Fondos_Terrenos.rb	12636
+418	434792	0416_Repelente_Infinito	418_0416_Repelente_Infinito.rb	1721
+419	322175	0417_Marin_s_Map_Exporter	419_0417_Marin_s_Map_Exporter.rb	7019
+420	649906	0418_Overworld_Shadows_EX	420_0418_Overworld_Shadows_EX.rb	12541
+421	385280	0419_Pokevial	421_0419_Pokevial.rb	4289
+422	299593	0420_Species_Introduction	422_0420_Species_Introduction.rb	6886
+423	714434	0421_Storage_System_Utilities	423_0421_Storage_System_Utilities.rb	40502
+424	454443	0422_PokedexQuickAccess	424_0422_PokedexQuickAccess.rb	2053
+425	828189	0423_TDW_Debug_List_Search	425_0423_TDW_Debug_List_Search.rb	8777
+426	305612	0424_TradeFromPC	426_0424_TradeFromPC.rb	5445
+427	331346	0425_Turbo	427_0425_Turbo.rb	11252
+428	441981	0426_Barras_entrenadores	428_0426_Barras_entrenadores.rb	6254
+429	162238	0427_Easy_Debug_Terminal	429_0427_Easy_Debug_Terminal.rb	6314
+430	651921	0428_ItemFind	430_0428_ItemFind.rb	6325
+431	855159	0429_Mostrar_nombres_NPCs	431_0429_Mostrar_nombres_NPCs.rb	9083
+432	239974	0430_Incubadora	432_0430_Incubadora.rb	12652
+433	138378	0431_PokedexSearcher	433_0431_PokedexSearcher.rb	1883
+434	496171	0432_RestoreItemsAfterBattle	434_0432_RestoreItemsAfterBattle.rb	1330
+435	698404	0433_BagSearcher	435_0433_BagSearcher.rb	1819
+436	942510	0434_FormChanger	436_0434_FormChanger.rb	2758
+437	321684	0435_Egg_move_tutor	437_0435_Egg_move_tutor.rb	8371
+438	988319	0436_ItemBallPrinter	438_0436_ItemBallPrinter.rb	14460
+439	916439	0437___________________	439_0437___________________.rb	0
+440	247930	0438____Pokegear_Themes___	440_0438____Pokegear_Themes___.rb	0
+441	742285	0439_Pokegear_Config	441_0439_Pokegear_Config.rb	1523
+442	565566	0440_Pokegear_Main	442_0440_Pokegear_Main.rb	6210
+443	552116	0441_Pokegear_Themes	443_0441_Pokegear_Themes.rb	6205
+444	718242	0442_FL_s_Pokegear_Watch_addon	444_0442_FL_s_Pokegear_Watch_addon.rb	3618
+445	828168	0443_Pokegear_Phone	445_0443_Pokegear_Phone.rb	2380
+446	719273	0444_Pokegear_RegionMap	446_0444_Pokegear_RegionMap.rb	4914
+447	129483	0445_Pokegear_ThemeButton	447_0445_Pokegear_ThemeButton.rb	526
+448	508320	0446_Pokegear_ThemeOptions	448_0446_Pokegear_ThemeOptions.rb	2787
+449	954155	0447___________________	449_0447___________________.rb	0
+450	421462	0448____Main___	450_0448____Main___.rb	0
+451	999999	CustomTitleScreen	451_CustomTitleScreen.rb	6135
+452	503472	MOD: 000_Multiplayer_Online	452_MOD_ 000_Multiplayer_Online.rb	504587
+453	196660	MOD: 000b_Multiplayer_UnnamedPatch	453_MOD_ 000b_Multiplayer_UnnamedPatch.rb	22082
+454	106410	MOD: 000c_Disable_Challenge_Modes	454_MOD_ 000c_Disable_Challenge_Modes.rb	2227
+455	411410	MOD: 000d_Multiplayer_Battle_Trade_RNG_Sync	455_MOD_ 000d_Multiplayer_Battle_Trade_RNG_Sync.rb	401270
+456	371801	MOD: 001_Multiplayer_OnLan	456_MOD_ 001_Multiplayer_OnLan.rb	59929
+457	12332	MOD: 002_Script_Skins	457_MOD_ 002_Script_Skins.rb	72694
+458	52197	MOD: 003_Multiplayer_Evolution	458_MOD_ 003_Multiplayer_Evolution.rb	26551
+459	398189	MOD: 006_Multiplayer_Rematch	459_MOD_ 006_Multiplayer_Rematch.rb	70745
+460	855102	MOD: 029_Multiplayer_Patches	460_MOD_ 029_Multiplayer_Patches.rb	141823
+461	961799	MOD: 030_Multiplayer_Coop_Invite_Patch	461_MOD_ 030_Multiplayer_Coop_Invite_Patch.rb	7255
+462	698429	MOD: 031_Multiplayer_Coop_Battle_Patch	462_MOD_ 031_Multiplayer_Coop_Battle_Patch.rb	6681
+463	597529	MOD: 032_Multiplayer_Coop_Lock_Patch	463_MOD_ 032_Multiplayer_Coop_Lock_Patch.rb	13804
+464	47255	MOD: 033_Multiplayer_Coop_Exp_Patch	464_MOD_ 033_Multiplayer_Coop_Exp_Patch.rb	11747
+465	926919	MOD: 038_Multiplayer_Detailed_Logs	465_MOD_ 038_Multiplayer_Detailed_Logs.rb	13963
+466	507425	MOD: 039_Multiplayer_Evolution_Logger	466_MOD_ 039_Multiplayer_Evolution_Logger.rb	2913
+467	483599	MOD: 040_Multiplayer_Post_Plugin_Patches	467_MOD_ 040_Multiplayer_Post_Plugin_Patches.rb	53082
+468	257132	MOD: 041_Multiplayer_Visible_Items	468_MOD_ 041_Multiplayer_Visible_Items.rb	17255
+469	817134	MOD: 042_Multiplayer_Coop_Spectator_Option	469_MOD_ 042_Multiplayer_Coop_Spectator_Option.rb	1277
+470	619384	MOD: 043_Multiplayer_Dropped_Items	470_MOD_ 043_Multiplayer_Dropped_Items.rb	34074
+471	987787	MOD: 044_Multiplayer_Coop_Sync_Disabled_Patch	471_MOD_ 044_Multiplayer_Coop_Sync_Disabled_Patch.rb	9598
+472	682981	MOD: 045_Multiplayer_Coop_Map_Partner_Patch	472_MOD_ 045_Multiplayer_Coop_Map_Partner_Patch.rb	4793
+473	818691	MOD: 046_Multiplayer_Coop_Opponent_Real_HP_Patch	473_MOD_ 046_Multiplayer_Coop_Opponent_Real_HP_Patch.rb	1132
+474	321224	MOD: 047_Multiplayer_Dynamic_Weather	474_MOD_ 047_Multiplayer_Dynamic_Weather.rb	32330
+475	134196	MOD: 048_Multiplayer_Released_Roaming_Pokemon	475_MOD_ 048_Multiplayer_Released_Roaming_Pokemon.rb	33155
+476	216682	MOD: 049_Multiplayer_Coop_Full_Sync	476_MOD_ 049_Multiplayer_Coop_Full_Sync.rb	11199
+477	16744	MOD: 051_Multiplayer_Modular_Partner	477_MOD_ 051_Multiplayer_Modular_Partner.rb	7172
+478	964633	MOD: 052_Multiplayer_Battle_Filters	478_MOD_ 052_Multiplayer_Battle_Filters.rb	13779
+479	489953	MOD: 055_Multiplayer_Speech_Bubbles	479_MOD_ 055_Multiplayer_Speech_Bubbles.rb	12033
+480	519063	MOD: 058_Multiplayer_Online_Economy	480_MOD_ 058_Multiplayer_Online_Economy.rb	24092
+481	317073	MOD: 059_PTBR_Dialogue_Exporter	481_MOD_ 059_PTBR_Dialogue_Exporter.rb	9838
+482	59049	MOD: 060_Party_Touch_Modular	482_MOD_ 060_Party_Touch_Modular.rb	8999
+483	445827	MOD: 061_Menu_Touch_Modular	483_MOD_ 061_Menu_Touch_Modular.rb	94534
+484	904090	MOD: 062_Pokedex_Touch_Modular	484_MOD_ 062_Pokedex_Touch_Modular.rb	6962
+485	277011	MOD: 063_Summary_Touch_Modular	485_MOD_ 063_Summary_Touch_Modular.rb	7939
+486	120711	MOD: 064_Bag_Touch_Modular	486_MOD_ 064_Bag_Touch_Modular.rb	6182
+487	567283	MOD: 065_Multiplayer_Coop_Party	487_MOD_ 065_Multiplayer_Coop_Party.rb	16942
+488	481170	MOD: 066_Multiplayer_Chat	488_MOD_ 066_Multiplayer_Chat.rb	37474
+489	805135	MOD: 067_Pokemon_Center_Mug_Fix	489_MOD_ 067_Pokemon_Center_Mug_Fix.rb	4015
+490	576581	MOD: 068_Gift_Boxes	490_MOD_ 068_Gift_Boxes.rb	46565
+491	714746	MOD: 070_Multiplayer_OW_Spawns_Sync	491_MOD_ 070_Multiplayer_OW_Spawns_Sync.rb	42970
+492	454417	MOD: 097_Asynchronous_Save	492_MOD_ 097_Asynchronous_Save.rb	5287
+493	656608	MOD: 098_Wild_IV_Stars	493_MOD_ 098_Wild_IV_Stars.rb	13053
+494	500634	MOD: 099_Anti_Black_Screen	494_MOD_ 099_Anti_Black_Screen.rb	23709
+495	424355	MOD: 099_Save_Coordinate_Fix	495_MOD_ 099_Save_Coordinate_Fix.rb	29975
+496	325424	MOD: 099_Save_Size_Optimizer	496_MOD_ 099_Save_Size_Optimizer.rb	18190
+497	201959	MOD: 099_Visual_Garbage_Collector	497_MOD_ 099_Visual_Garbage_Collector.rb	8241
+498	289452	MOD: 100_Multiplayer_Whitelist	498_MOD_ 100_Multiplayer_Whitelist.rb	48924
+499	890763	MOD: 101_Force_Complete_Mode	499_MOD_ 101_Force_Complete_Mode.rb	3220
+500	674492	MOD: 101_Multiplayer_Cloud_Save_Hook	500_MOD_ 101_Multiplayer_Cloud_Save_Hook.rb	92938
+501	798949	MOD: 000e_Multiplayer_FPS_Patch	501_MOD_ 000e_Multiplayer_FPS_Patch.rb	38819
+502	829148	MOD: 999_TileId_Shadow_Hotfix	502_MOD_ 999_TileId_Shadow_Hotfix.rb	774
+503	617684	MOD: 100_Rarity_Eggs_System	503_MOD_ 100_Rarity_Eggs_System.rb	23662
+504	360750	MOD: 102_Multiplayer_Lag_Killer	504_MOD_ 102_Multiplayer_Lag_Killer.rb	1667
+505	968992	MOD: 103_Multiplayer_Tournament	505_MOD_ 103_Multiplayer_Tournament.rb	14963
+506	21072	MOD: 999_Disable_Cable_Club	506_MOD_ 999_Disable_Cable_Club.rb	2059
+507	340496	MOD: 104_Multiplayer_Raid_Torre	507_MOD_ 104_Multiplayer_Raid_Torre.rb	41058
+508	938481	MOD: 106_Multiplayer_Raid_NPC_Patch	508_MOD_ 106_Multiplayer_Raid_NPC_Patch.rb	14030
+509	888888	MOD: 200_Multiplayer_Authoritative_Coop	509_MOD_ 200_Multiplayer_Authoritative_Coop.rb	6312
+510	939064	MOD: 108_Custom_Money_Bags	510_MOD_ 108_Custom_Money_Bags.rb	8828
+511	786854	MOD: 109_Super_Shiny_Color_Orbs	511_MOD_ 109_Super_Shiny_Color_Orbs.rb	3287
+512	797908	MOD: 110_Multiplayer_PVP_Lineup_Sync	512_MOD_ 110_Multiplayer_PVP_Lineup_Sync.rb	29889
+513	941199	MOD: 112_Text_No_Shadow	513_MOD_ 112_Text_No_Shadow.rb	3469
+514	650047	MOD: 113_KeyItem_Tickets	514_MOD_ 113_KeyItem_Tickets.rb	2651
+515	884833	MOD: 114_Bag_Pocket_Repair	515_MOD_ 114_Bag_Pocket_Repair.rb	4011
+516	768062	MOD: 115_Super_Shinyzador	516_MOD_ 115_Super_Shinyzador.rb	6174
+517	768337	MOD: 116_Pokemon_Box_Link	517_MOD_ 116_Pokemon_Box_Link.rb	2971
+518	601627	MOD: 117_Follower_Refresh_Party	518_MOD_ 117_Follower_Refresh_Party.rb	4904
+519	543210	MOD: 118_IP_VPS_Migracao	519_MOD_ 118_IP_VPS_Migracao.rb	3655
+520	771276	MOD: 120_Trade_Expert_Sem_Lendarios	520_MOD_ 120_Trade_Expert_Sem_Lendarios.rb	3386
+521	260359	MOD: 121_Roaming_Lendarios	521_MOD_ 121_Roaming_Lendarios.rb	19254
+522	179002	MOD: 122_Trainer_Fala_Sprite	522_MOD_ 122_Trainer_Fala_Sprite.rb	8675
+523	463445	MOD: 123_TMs_Consumiveis_Vendaveis	523_MOD_ 123_TMs_Consumiveis_Vendaveis.rb	2777
+524	148726	MOD: 124_Coop_Determinismo_V3	524_MOD_ 124_Coop_Determinismo_V3.rb	21439
+525	733048	MOD: 125_Coop_CableClub_Base	525_MOD_ 125_Coop_CableClub_Base.rb	72161
+526	972003	MOD: 126_Coop_Espectador_Gravador	526_MOD_ 126_Coop_Espectador_Gravador.rb	8503
+527	681096	MOD: 127_Coop_Auth_Reprodutor	527_MOD_ 127_Coop_Auth_Reprodutor.rb	33095
+528	609266	MOD: 128_Coop_Slot_Remap	528_MOD_ 128_Coop_Slot_Remap.rb	6190
+529	628915	MOD: 130_Recover_Trace	529_MOD_ 130_Recover_Trace.rb	7107
+530	560781	MOD: 131_Fix_Pesca_Travada	530_MOD_ 131_Fix_Pesca_Travada.rb	4287
+531	528496	MOD: 132_Fix_Movimento_Travado	531_MOD_ 132_Fix_Movimento_Travado.rb	7719
+532	121597	MOD: 133_Skins_Personagens_Do_Jogo	532_MOD_ 133_Skins_Personagens_Do_Jogo.rb	17762
+533	242217	MOD: 134_Evento_Shiny_E_Anuncio	533_MOD_ 134_Evento_Shiny_E_Anuncio.rb	7373
+534	112718	MOD: 135_Coop_Cadeia_Compartilhada	534_MOD_ 135_Coop_Cadeia_Compartilhada.rb	23996
+535	443526	MOD: 136_Movimento_Remoto	535_MOD_ 136_Movimento_Remoto.rb	18027
+536	857782	MOD: 137_Skins_Aprovacao	536_MOD_ 137_Skins_Aprovacao.rb	5509
+537	710106	MOD: 138_Fix_Skin_Perdida	537_MOD_ 138_Fix_Skin_Perdida.rb	3484
+538	318404	MOD: 139_Esconder_Menu_Multiplayer	538_MOD_ 139_Esconder_Menu_Multiplayer.rb	7928
+539	270674	MOD: 140_Fix_Follower_Trancado	539_MOD_ 140_Fix_Follower_Trancado.rb	5338
+540	127079	MOD: 141_PVP_Selecao_Automatica	540_MOD_ 141_PVP_Selecao_Automatica.rb	4413
+541	581517	MOD: 142_Neve_Opacidade	541_MOD_ 142_Neve_Opacidade.rb	6365
+542	638239	MOD: 143_Comando_Clima_Admin	542_MOD_ 143_Comando_Clima_Admin.rb	4852
+543	732978	MOD: 144_Estatisticas_Multiplayer	543_MOD_ 144_Estatisticas_Multiplayer.rb	7198
+544	9672	MOD: 145_Selo_Verificado	544_MOD_ 145_Selo_Verificado.rb	16184
+545	856767	MOD: 146_PVP_Queda_Adversario	545_MOD_ 146_PVP_Queda_Adversario.rb	22118
+546	345389	MOD: 147_Ranqueado	546_MOD_ 147_Ranqueado.rb	8975
+547	136267	MOD: 148_Cartao_Rank	547_MOD_ 148_Cartao_Rank.rb	8197
+548	11449	MOD: 149_Rank_Subiu_Animacao	548_MOD_ 149_Rank_Subiu_Animacao.rb	14589
+549	861141	MOD: 150_Comando_Rank_Admin	549_MOD_ 150_Comando_Rank_Admin.rb	7086
+550	392776	MOD: 151_Comando_Evento_Shiny	550_MOD_ 151_Comando_Evento_Shiny.rb	8456
+551	923745	MOD: 152_Fix_Evento_Sem_Coordenada	551_MOD_ 152_Fix_Evento_Sem_Coordenada.rb	13074
+552	540736	MOD: 153_Relearner_Cobra_Pepita	552_MOD_ 153_Relearner_Cobra_Pepita.rb	4054
+553	234414	MOD: 154_Pokedex_Cores_Shiny	553_MOD_ 154_Pokedex_Cores_Shiny.rb	30411
+554	523237	MOD: 155_NPC_Ajuda_Captura	554_MOD_ 155_NPC_Ajuda_Captura.rb	51285
+555	191875	MOD: 156_Montaria	555_MOD_ 156_Montaria.rb	83271
+556	436834	MOD: 157_Pegadas_Montaria	556_MOD_ 157_Pegadas_Montaria.rb	13056
+557	697953	MOD: 158_Cassino_Roleta	557_MOD_ 158_Cassino_Roleta.rb	22199
+558	251767	MOD: 159_Selas_Montaria	558_MOD_ 159_Selas_Montaria.rb	19230
+559	182987	MOD: 160_Montaria_Animacao	559_MOD_ 160_Montaria_Animacao.rb	18342
+560	980933	MOD: 161_Diagnostico_FPS	560_MOD_ 161_Diagnostico_FPS.rb	15545
+561	52021	MOD: 162_Diagnostico_Lento	561_MOD_ 162_Diagnostico_Lento.rb	20703
+562	743303	MOD: 163_Destrava_Evento_Preso	562_MOD_ 163_Destrava_Evento_Preso.rb	7562
+563	323162	MOD: 164_Fix_Ordem_Equipa_Batalha	563_MOD_ 164_Fix_Ordem_Equipa_Batalha.rb	3929
+564	196441	MOD: 165_Brilho_Montaria	564_MOD_ 165_Brilho_Montaria.rb	16438
+565	275263	MOD: 166_Perfume_Sweet_Scent	565_MOD_ 166_Perfume_Sweet_Scent.rb	26684
+566	741268	MOD: 167_Log_Shiny	566_MOD_ 167_Log_Shiny.rb	6886
+567	104443	MOD: 168_Anuncio_Shiny_Autoritativo	567_MOD_ 168_Anuncio_Shiny_Autoritativo.rb	3496
+568	609807	MOD: 169_Follower_Escolha_Permanente	568_MOD_ 169_Follower_Escolha_Permanente.rb	9573
+569	371628	MOD: 170_Neblina_Baixa	569_MOD_ 170_Neblina_Baixa.rb	6782
+570	150198	MOD: 171_Horda_Perfume	570_MOD_ 171_Horda_Perfume.rb	14266
+571	585424	MOD: 172_Horda_Databox	571_MOD_ 172_Horda_Databox.rb	17376
+572	499983	MOD: 173_Horda_Captura	572_MOD_ 173_Horda_Captura.rb	4632
+573	900965	MOD: 174_Pocao_Shiny_Cadeia	573_MOD_ 174_Pocao_Shiny_Cadeia.rb	5576
+574	921013	MOD: 175_Comando_Menu	574_MOD_ 175_Comando_Menu.rb	4251
+575	791714	MOD: 176_Premio_Pokedex	575_MOD_ 176_Premio_Pokedex.rb	4706
+576	628281	MOD: 177_Comando_TP_Admin	576_MOD_ 177_Comando_TP_Admin.rb	15613
+577	115210	MOD: 178_Refresh_Itens_Canal	577_MOD_ 178_Refresh_Itens_Canal.rb	4777
+578	846558	MOD: 179_Sincronizar_Canal	578_MOD_ 179_Sincronizar_Canal.rb	4441
+579	597738	MOD: 180_Loja_Grelha	579_MOD_ 180_Loja_Grelha.rb	25569
+580	976863	MOD: 181_Troca_Completa	580_MOD_ 181_Troca_Completa.rb	48142
+581	483227	MOD: 182_Chat_Historico	581_MOD_ 182_Chat_Historico.rb	10387
+582	176850	MOD: 183_Dex_Shiny	582_MOD_ 183_Dex_Shiny.rb	22214
+583	69377	MOD: 184_Dex_Shiny_Ecra	583_MOD_ 184_Dex_Shiny_Ecra.rb	34217
+584	695976	MOD: 185_Comando_Limpar_Itens	584_MOD_ 185_Comando_Limpar_Itens.rb	5526
+585	564048	MOD: 186_Canal_ADM	585_MOD_ 186_Canal_ADM.rb	7520
+586	801817	MOD: 187_Evento_Lendario	586_MOD_ 187_Evento_Lendario.rb	16983
+587	872910	MOD: 188_Comando_Ir_Mapa	587_MOD_ 188_Comando_Ir_Mapa.rb	6223
+588	866108	MOD: 189_Arena_Acao	588_MOD_ 189_Arena_Acao.rb	795744
+589	994922	MOD: 190_Mega_Uma_Vez	589_MOD_ 190_Mega_Uma_Vez.rb	6956
+590	799249	MOD: 191_Coop_Captura_Unica	590_MOD_ 191_Coop_Captura_Unica.rb	5345
+591	718309	MOD: 192_Raid_Caverna	591_MOD_ 192_Raid_Caverna.rb	161145
+592	496672	MOD: 193_Arena_Log_Rede	592_MOD_ 193_Arena_Log_Rede.rb	17005
+593	5943	MOD: 194_Arena_Log_Movimento	593_MOD_ 194_Arena_Log_Movimento.rb	17492
+594	593645	MOD: 195_Arena_Log_Intrusos	594_MOD_ 195_Arena_Log_Intrusos.rb	11033
+595	966170	MOD: 196_Comando_Horda_Shiny	595_MOD_ 196_Comando_Horda_Shiny.rb	8475
+596	391761	MOD: 197_Arena_Animador	596_MOD_ 197_Arena_Animador.rb	30247
+597	426980	MOD: 198_Arena_Remendos_Embutidos	597_MOD_ 198_Arena_Remendos_Embutidos.rb	307139
+598	959036	MOD: 199_Follower_Passeio	598_MOD_ 199_Follower_Passeio.rb	8887
+599	429834	MOD: 200_Respiracao_Bonecos	599_MOD_ 200_Respiracao_Bonecos.rb	7937
+600	409848	MOD: 201_Arena_Habilidades	600_MOD_ 201_Arena_Habilidades.rb	11289
+601	764681	MOD: 202_Arena_Evolucao	601_MOD_ 202_Arena_Evolucao.rb	8743
+602	896723	MOD: 203_Arena_Itens	602_MOD_ 203_Arena_Itens.rb	13992
+603	971928	MOD: 204_Arena_Itens_Chave	603_MOD_ 204_Arena_Itens_Chave.rb	5188
+604	198912	MOD: 205_Arena_Ressurreicao	604_MOD_ 205_Arena_Ressurreicao.rb	10510
+605	483111	MOD: 206_Ninho_Alfa_Sem_Bola	605_MOD_ 206_Ninho_Alfa_Sem_Bola.rb	4756
+606	172803	MOD: 207_Diagnostico_Tecla_C	606_MOD_ 207_Diagnostico_Tecla_C.rb	6766
+607	493703	0454_Main	607_0454_Main.rb	56750
+608	20260830	MOD: PvP Radar Live Capture Safe	608_MOD_ PvP Radar Live Capture Safe.rb	7628
+609	20260831	MOD: Competitive Coach v19 Fidelity Rules	609_MOD_ Competitive Coach v19 Fidelity Rules.rb	10037
+610	610	MOD: Competitive Coach v20 Native Rules Engine	610_MOD_ Competitive Coach v20 Native Rules Engine.rb	8996
+611	611	MOD: Competitive Coach v21 Battle Digital Twin	611_MOD_ Competitive Coach v21 Battle Digital Twin.rb	8679
+612	20260832	MOD: Competitive Coach v22 6x6 Strategic Twin	612_MOD_ Competitive Coach v22 6x6 Strategic Twin.rb	13281
+613	20260833	MOD: Competitive Coach v23 Probabilistic Battle Solver	613_MOD_ Competitive Coach v23 Probabilistic Battle Solver.rb	8849
+614	20260834	MOD: Competitive Coach v26 Battle-Isolated Initiative	614_MOD_ Competitive Coach v26 Battle-Isolated Initiative.rb	10364
+615	20260920	MOD: Competitive Coach v27 Pre-Action KO Authority	615_MOD_ Competitive Coach v27 Pre-Action KO Authority.rb	5455
